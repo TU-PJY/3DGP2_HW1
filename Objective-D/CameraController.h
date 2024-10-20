@@ -5,13 +5,14 @@
 
 // 관전 카메라 컨트롤러
 class CameraController : public GameObject {
-public:
+private:
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
 	bool MoveUp{}, MoveDown{};
 
 	XMFLOAT3 CamPosition{0.0, 30.0, 0.0};  // 카메라 위치 기억용
 	XMFLOAT3 CamRotation{};
 
+public:
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 		switch (nMessageID) {
 		case WM_KEYDOWN:
@@ -51,12 +52,13 @@ public:
 	void InputMouseMotion(HWND hWnd, POINT PrevCursorPos) {
 		if (GetCapture() == hWnd) {
 			mouse.HideCursor();
-			float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
-			float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
-			mouse.SetPositionToPrev(PrevCursorPos);
 
 			// 관전 모드에서만 동작
 			if (camera.Mode == CamMode::SPECTOR_MODE) {
+				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
+				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
+				mouse.SetPositionToPrev(PrevCursorPos);
+
 				CamRotation.x += cyDelta * 0.003;
 				CamRotation.y += cxDelta * 0.003;
 			}
@@ -64,7 +66,7 @@ public:
 	}
 
 	void Update(float FT) {
-		// 관점 모드에서만 동작한다.
+		// 관전 모드에서만 동작한다.
 		if (camera.Mode == CamMode::SPECTOR_MODE) {
 			if (MoveForward)
 				camera.MoveForwardWithoutHeight(FT * 40);

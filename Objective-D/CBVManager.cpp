@@ -15,12 +15,12 @@ void CreateCBVResource(ID3D12Device* Device) {
 
 	// light data
 	LightInfo Light{
-		{10.0f, -10.0f, 0.0f },  // Light Position
+		{100.0f, -100.0f, 0.0f },  // Light Position
 		0.0,
-		{0.7f, 0.7f, 0.7f },  // Light Col
+		{0.7f, 0.7f, 0.7f },  // Light Color
 		0.0,
 		{0.4f, 0.4f, 0.4f },  // Ambient Light Color
-		2.0,  // Shadow Strength
+		1.0,  // Shadow Strength
 	};
 	ReserveCBV(LightCBV, 1);
 	CBVUtil::Create(Device, &Light, sizeof(Light), LightCBV, 0);

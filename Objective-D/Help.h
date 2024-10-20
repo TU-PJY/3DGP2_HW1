@@ -8,7 +8,7 @@
 
 // 도움말
 class Help : public GameObject {
-public:
+private:
 	// 실제 스크롤 위치
 	float ScrollY = -1.0;
 
@@ -23,7 +23,7 @@ public:
 	float EnterAlpha{};
 	float AlphaNum{};
 
-private:
+public:
 	void InputMouseWheel(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 		switch (nMessageID) {
 		case WM_MOUSEWHEEL:{
@@ -80,7 +80,7 @@ private:
 		SetToImageMode(CmdList);
 
 		// 스크롤 이동
-		Transform::SetPosition(TranslateMatrix, 0.0, ScrollY, 0.0);
+		Transform::Move(TranslateMatrix, 0.0, ScrollY, 0.0);
 
 		// 이미지 종횡비와 동일하게 매쉬의 종횡비를 조정한다.
 		Transform::ImageAspect(ScaleMatrix, 500, 1100);
@@ -98,7 +98,7 @@ private:
 		// 스크롤 안내 텍스트
 		InitMatrix(CmdList, RenderType::Ortho);
 		SetToImageMode(CmdList);
-		Transform::SetPosition(TranslateMatrix, 0.7 * ASPECT_RATIO, 0.0, 0.0);
+		Transform::Move(TranslateMatrix, 0.7 * ASPECT_RATIO, 0.0, 0.0);
 		Transform::Scale(ScaleMatrix, 0.5, 0.5, 1.0);
 		BindTexture(CmdList, ScrollHelpTex);
 		UseShader(CmdList, BasicShader, false);
@@ -107,7 +107,7 @@ private:
 		// 스크롤 안내 화살표(아래)
 		InitMatrix(CmdList, RenderType::Ortho);
 		SetToImageMode(CmdList);
-		Transform::SetPosition(TranslateMatrix, 0.7 * ASPECT_RATIO, -0.3 - ArrowPosition, 0.0);
+		Transform::Move(TranslateMatrix, 0.7 * ASPECT_RATIO, -0.3 - ArrowPosition, 0.0);
 		Transform::Scale(ScaleMatrix, 0.2, 0.2, 1.0);
 		BindTexture(CmdList, ArrowTex);
 		UseShader(CmdList, BasicShader, false);
@@ -117,7 +117,7 @@ private:
 		InitMatrix(CmdList, RenderType::Ortho);
 		SetToImageMode(CmdList);
 		FlipTexture(CmdList, false, false);
-		Transform::SetPosition(TranslateMatrix, 0.7 * ASPECT_RATIO, 0.3 + ArrowPosition, 0.0);
+		Transform::Move(TranslateMatrix, 0.7 * ASPECT_RATIO, 0.3 + ArrowPosition, 0.0);
 		Transform::Scale(ScaleMatrix, 0.2, 0.2, 1.0);
 		BindTexture(CmdList, ArrowTex);
 		UseShader(CmdList, BasicShader, false);
@@ -126,7 +126,7 @@ private:
 		// press to enter
 		InitMatrix(CmdList, RenderType::Ortho);
 		SetToImageMode(CmdList);
-		Transform::SetPosition(TranslateMatrix, 0.0, ScrollY - 1.8, 0.0);
+		Transform::Move(TranslateMatrix, 0.0, ScrollY - 1.8, 0.0);
 		SetAlpha(CmdList, EnterAlpha);
 		BindTexture(CmdList, EnterTex);
 		UseShader(CmdList, BasicShader, false);

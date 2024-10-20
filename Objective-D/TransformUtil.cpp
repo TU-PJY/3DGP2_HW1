@@ -5,7 +5,7 @@
 // 변환을 직접 커스텀 할 수 있도록 행렬을 레퍼런스로 전달하도록 했다
 
 // 평행이동 변환
-void Transform::SetPosition(XMFLOAT4X4& Matrix, float X, float Y, float Z) {
+void Transform::Move(XMFLOAT4X4& Matrix, float X, float Y, float Z) {
 	XMMATRIX TranslateMat = XMMatrixTranslation(X, Y, Z);
 	Matrix = Mat4::Multiply(TranslateMat, Matrix);
 }
@@ -20,6 +20,11 @@ void Transform::Rotate(XMFLOAT4X4& Matrix, float RotationValue, float X, float Y
 void Transform::Rotate(XMFLOAT4X4& Matrix, float RotationX, float RotationY, float RotationZ) {
 	XMMATRIX RotateMat = XMMatrixRotationRollPitchYaw(
 		XMConvertToRadians(RotationX), XMConvertToRadians(RotationY), XMConvertToRadians(RotationZ));
+	Matrix = Mat4::Multiply(RotateMat, Matrix);
+}
+
+void Transform::RotateRad(XMFLOAT4X4& Matrix, float RotationX, float RotationY, float RotationZ) {
+	XMMATRIX RotateMat = XMMatrixRotationRollPitchYaw(RotationX, RotationY, RotationZ);
 	Matrix = Mat4::Multiply(RotateMat, Matrix);
 }
 

@@ -22,7 +22,7 @@ void OOBB::Render(ID3D12GraphicsCommandList* CmdList) {
 	TranslateMatrix = Mat4::Identity();
 	ScaleMatrix = Mat4::Identity();
 
-	Transform::SetPosition(TranslateMatrix, oobb.Center.x, oobb.Center.y, oobb.Center.z);
+	Transform::Move(TranslateMatrix, oobb.Center.x, oobb.Center.y, oobb.Center.z);
 	Transform::Scale(ScaleMatrix, oobb.Extents.x, oobb.Extents.y, oobb.Extents.z);
 
 	// 쿼터니언을 회전행렬로 변환
@@ -97,7 +97,7 @@ void AABB::Render(ID3D12GraphicsCommandList* CmdList) {
 	TranslateMatrix = Mat4::Identity();
 	ScaleMatrix = Mat4::Identity();
 
-	Transform::SetPosition(TranslateMatrix, aabb.Center.x, aabb.Center.y, aabb.Center.z);
+	Transform::Move(TranslateMatrix, aabb.Center.x, aabb.Center.y, aabb.Center.z);
 	Transform::Scale(ScaleMatrix, aabb.Extents.x, aabb.Extents.y, aabb.Extents.z);
 
 	CBVUtil::Input(CmdList, BoolLightCBV, 0);

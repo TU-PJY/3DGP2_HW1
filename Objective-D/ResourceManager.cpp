@@ -20,6 +20,7 @@ Texture* EnterTex; // 시작 안내 텍스트
 // Play Mode
 Mesh* TerrainMesh; // 터레인 매쉬
 Texture* TerrainTex; // 터레인 텍스처
+Texture* TreeTex; // 나무 빌보드 텍스처
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
@@ -70,4 +71,5 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 
 	// play mode
 	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg");
+	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png");
 }

@@ -3,18 +3,31 @@
 #include "CameraUtil.h"
 #include "ResourceManager.h"
 #include "TransformUtil.h"
+#include "TerrainUtil.h"
+
 
 class Terrain : public GameObject {
-private:
-	
 public:
+	Terrain() {
+		// 터레인 정보를 터레인 충돌처리 유틸에 전달한다.
+		Transform::Move(TranslateMatrix, 0.0, -5.0, 0.0);
+		Transform::Scale(ScaleMatrix, 20.0, 30.0, 40.0);
+		terrainUtil.InputData(TranslateMatrix, RotateMatrix, ScaleMatrix, TerrainMesh);
+	}
+
 	void Render(CommandList CmdList) {
-		InitMatrix(CmdList, RenderType::Pers);
-		Transform::Scale(ScaleMatrix, 20.0, 40.0, 30.0);
-		Transform::Rotate(RotateMatrix, -90.0, 180.0, 0.0);
-		Transform::SetPosition(TranslateMatrix,  0.0, -5.0, 0.0);
+		// 터레인은 정적 오브젝트이므로 행렬 초기화 및 변환을 실행하지 않는다.
+		renderType = RenderType::Pers;
+		EnableLight(CmdList);
+		AlphaValue = 1.0f;
+		FlipTexture(CmdList, false, false);
+		camera.SetToDefaultMode();
+		SetColor(0.0, 0.0, 0.0);
+
 		BindTexture(CmdList, TerrainTex);
 		UseShader(CmdList, BasicShader);
 		RenderMesh(CmdList, TerrainMesh);
+
+		terrainUtil.InputData(TranslateMatrix, RotateMatrix, ScaleMatrix, TerrainMesh);
 	}
 };

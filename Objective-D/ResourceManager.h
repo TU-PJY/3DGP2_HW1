@@ -29,6 +29,7 @@ extern Texture* EnterTex; // 시작 안내 텍스트
 // Play Mode
 extern Mesh* TerrainMesh; // 터레인 매쉬
 extern Texture* TerrainTex; // 터레인 텍스처
+extern Texture* TreeTex; // 나무 빌보드 텍스처
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
 void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
