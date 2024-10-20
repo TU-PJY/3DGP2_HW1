@@ -217,6 +217,9 @@
     <ClInclude Include="PlayMode.h">
       <Filter>[1]____________[ Game Mode ]\[ Mode1 ]\[ Play Mode ]</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkUtil.cpp">

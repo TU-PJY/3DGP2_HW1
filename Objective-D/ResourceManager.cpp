@@ -11,15 +11,15 @@ Texture* LineTex;
 Mesh* BoundMesh;
 ////////////////////////////////
 
-// 도움말 이미지
-Texture* HelpTex;
-
-// 스크롤 안내 이미지
-Texture* ArrowTex;
+// Home Mode
+Texture* HelpTex; // 도움말 이미지
+Texture* ArrowTex; // 스크롤 안내 이미지
 Texture* ScrollHelpTex;
+Texture* EnterTex; // 시작 안내 텍스트
 
-// 시작 안내 텍스트
-Texture* EnterTex;
+// Play Mode
+Mesh* TerrainMesh; // 터레인 매쉬
+Texture* TerrainTex; // 터레인 텍스처
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
@@ -52,6 +52,8 @@ void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList
 	BoundMesh->CreateBoundboxMesh(Device, CmdList);
 	////////////////////////////////
 
+	// Play Mode
+	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.txt", MeshType::Text);
 }
 
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
@@ -60,8 +62,12 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	LineTex = new Texture(Device, CmdList, L"Resources//Image//line_tex.png");
 	////////////////////////////////
 
+	// Home Mode
 	HelpTex = new Texture(Device, CmdList, L"Resources//Image//help.png");
 	ArrowTex = new Texture(Device, CmdList, L"Resources//Image//arrow.png");
 	ScrollHelpTex = new Texture(Device, CmdList, L"Resources//Image//scroll_help.png");
 	EnterTex = new Texture(Device, CmdList, L"Resources//Image//press_enter.png");
+
+	// play mode
+	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.png");
 }

@@ -6,7 +6,7 @@
 
 #include "PlayMode.h"
 
-// 도움말 이미지
+// 도움말
 class Help : public GameObject {
 public:
 	// 실제 스크롤 위치
@@ -71,7 +71,7 @@ private:
 		}
 	}
 
-	void Render(ID3D12GraphicsCommandList* CmdList) {
+	void Render(CommandList CmdList) {
 		// 도움말 본문
 		// 행렬 초기화
 		InitMatrix(CmdList, RenderType::Ortho);
