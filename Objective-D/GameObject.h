@@ -41,7 +41,7 @@ public:
 	void SetColor(float R, float G, float B);
 	void MoveStrafe(XMFLOAT3& Position, XMFLOAT3 Right, float Distance);
 	void MoveForward(XMFLOAT3& Position, XMFLOAT3 Look, float Distance);
-	void MoveUp(XMFLOAT3& Position, XMFLOAT3 Up, float Distance);
+	void MoveVertical(XMFLOAT3& Position, XMFLOAT3 Up, float Distance);
 	void BindTexture(ID3D12GraphicsCommandList* CmdList, Texture* TexturePtr);
 	void UseShader(ID3D12GraphicsCommandList* CmdList, Shader* ShaderPtr, bool DepthTest = true);
 	void DisableLight(ID3D12GraphicsCommandList* CmdList);

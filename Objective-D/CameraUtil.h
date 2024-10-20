@@ -30,7 +30,6 @@ protected:
 	D3D12_RECT						ScissorRect{};
 
 private:
-	CamMode Mode{};
 
 	// 활성화 시 초기 행렬이 쉐이더에 전송된다.
 	bool StaticMode{};
@@ -39,6 +38,9 @@ public:
 	D3D12_VIEWPORT					Viewport{};
 	XMFLOAT4X4						ViewMatrix{};
 	XMFLOAT4X4						ProjectionMatrix{};
+
+	// 카메라 모드
+	CamMode Mode{};
 
 	// 정적 출력을 위한 스테틱 행렬 (예: UI, 이미지 등
 	XMFLOAT4X4 StaticViewMatrix{};
@@ -97,6 +99,8 @@ public:
 
 	void Move(float X, float Y, float Z);
 	void MoveForward(float MoveDistance);
+	void MoveStrafe(float MoveDistance);
+	void MoveVertical(float MoveDistance);
 	void Track(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, float fTimeElapsed);
 	void SetLookAt(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec);
 	void CalculateFrustumPlanes();

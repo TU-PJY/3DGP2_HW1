@@ -165,31 +165,6 @@ void Camera::SetCameraMode(CamMode ModeValue) {
 	Mode = ModeValue;
 }
 
-// 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
-void Camera::Move(XMFLOAT3 PositionValue) { Position = PositionValue; }
-XMFLOAT3& Camera::GetPosition() { return(Position); }
-void Camera::SetLookAtPosition(XMFLOAT3 LookAtValue) { LookAt = LookAtValue; }
-XMFLOAT3& Camera::GetLookAtPosition() { return(LookAt); }
-
-XMFLOAT3& Camera::GetRightVector() { return(Right); }
-XMFLOAT3& Camera::GetUpVector() { return(Up); }
-XMFLOAT3& Camera::GetLookVector() { return(Look); }
-
-float& Camera::GetPitch() { return(Pitch); }
-float& Camera::GetRoll() { return(Roll); }
-float& Camera::GetYaw() { return(Yaw); }
-
-void Camera::SetOffset(XMFLOAT3 Value) { Offset = Value; }
-XMFLOAT3& Camera::GetOffset() { return(Offset); }
-
-void Camera::SetTimeLag(float DelayValue) { MovingDelay = DelayValue; }
-float Camera::GetTimeLag() { return(MovingDelay); }
-
-XMFLOAT4X4 Camera::GetViewMatrix() { return(ViewMatrix); }
-XMFLOAT4X4 Camera::GetProjectionMatrix() { return(ProjectionMatrix); }
-D3D12_VIEWPORT Camera::GetViewport() { return(Viewport); }
-D3D12_RECT Camera::GetScissorRect() { return(ScissorRect); }
-
 // 카메라의 위치를 변경한다.
 void Camera::Move(float X, float Y, float Z) {
 	Position.x = X;
@@ -204,6 +179,20 @@ void Camera::MoveForward(float MoveDistance) {
 	Position.x += NormlaizedLook.x * MoveDistance;
 	Position.y += NormlaizedLook.y * MoveDistance;
 	Position.z += NormlaizedLook.z * MoveDistance;
+}
+
+// 현재 시점에서 옆으로 움직인다.
+void Camera::MoveStrafe(float MoveDistance) {
+	XMFLOAT3 NormlaizedRight = Vec3::Normalize(Right);
+
+	Position.x += NormlaizedRight.x * MoveDistance;
+	Position.y += NormlaizedRight.y * MoveDistance;
+	Position.z += NormlaizedRight.z * MoveDistance;
+}
+
+// 수직으로 움직인다.
+void Camera::MoveVertical(float MoveDistance) {
+	Position.y += MoveDistance;
 }
 
 // 카메라 회전, 벡터 초기화 후 새로운 벡터를 지정한다.
@@ -369,3 +358,28 @@ bool Camera::IsInFrustum(BoundingOrientedBox& BoundingBox) {
 #else
 #endif
 }
+
+// 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
+void Camera::Move(XMFLOAT3 PositionValue) { Position = PositionValue; }
+XMFLOAT3& Camera::GetPosition() { return(Position); }
+void Camera::SetLookAtPosition(XMFLOAT3 LookAtValue) { LookAt = LookAtValue; }
+XMFLOAT3& Camera::GetLookAtPosition() { return(LookAt); }
+
+XMFLOAT3& Camera::GetRightVector() { return(Right); }
+XMFLOAT3& Camera::GetUpVector() { return(Up); }
+XMFLOAT3& Camera::GetLookVector() { return(Look); }
+
+float& Camera::GetPitch() { return(Pitch); }
+float& Camera::GetRoll() { return(Roll); }
+float& Camera::GetYaw() { return(Yaw); }
+
+void Camera::SetOffset(XMFLOAT3 Value) { Offset = Value; }
+XMFLOAT3& Camera::GetOffset() { return(Offset); }
+
+void Camera::SetTimeLag(float DelayValue) { MovingDelay = DelayValue; }
+float Camera::GetTimeLag() { return(MovingDelay); }
+
+XMFLOAT4X4 Camera::GetViewMatrix() { return(ViewMatrix); }
+XMFLOAT4X4 Camera::GetProjectionMatrix() { return(ProjectionMatrix); }
+D3D12_VIEWPORT Camera::GetViewport() { return(Viewport); }
+D3D12_RECT Camera::GetScissorRect() { return(ScissorRect); }

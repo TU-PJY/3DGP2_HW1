@@ -54,7 +54,7 @@ void GameObject::MoveForward(XMFLOAT3& Position, XMFLOAT3 Look, float Distance) 
 }
 
 // 객체를 위로 움직인다. 현재 자신의 위치값과 자신의 up벡터, 속도값을 넣어주면 된다.
-void GameObject::MoveUp(XMFLOAT3& Position, XMFLOAT3 Up, float Distance) {
+void GameObject::MoveVertical(XMFLOAT3& Position, XMFLOAT3 Up, float Distance) {
 	Position = Vec3::Add(Position, Up, Distance);
 }
 

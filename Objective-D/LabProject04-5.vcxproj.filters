@@ -220,6 +220,9 @@
     <ClInclude Include="Terrain.h">
       <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
     </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkUtil.cpp">

@@ -149,6 +149,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="CameraUtil.h" />
     <ClInclude Include="CBVData.h" />
     <ClInclude Include="CBVManager.h" />
