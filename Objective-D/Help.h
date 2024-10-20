@@ -4,6 +4,8 @@
 #include "TransformUtil.h"
 #include <cmath>
 
+#include "PlayMode.h"
+
 // 도움말 이미지
 class Help : public GameObject {
 public:
@@ -36,6 +38,19 @@ private:
 				ScrollDest += 0.1;
 		}
 			break;
+		}
+	}
+
+	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+		switch (nMessageID) {
+		case WM_KEYDOWN:
+			switch (wParam) {
+			case VK_RETURN:
+				// 엔터 누를 시 플레이 모드로 전환
+				framework.SwitchMode(PlayMode::Start);
+				break;
+			}
+
 		}
 	}
 

@@ -166,6 +166,7 @@
     <ClInclude Include="Objective-D.h" />
     <ClInclude Include="MeshUtil.h" />
     <ClInclude Include="PickingUtil.h" />
+    <ClInclude Include="PlayMode.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="FrameworkUtil.h" />
     <ClInclude Include="DirectX_3D.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="HomeMode.cpp" />
     <ClCompile Include="MouseUtil.cpp" />
     <ClCompile Include="PickingUtil.cpp" />
+    <ClCompile Include="PlayMode.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Resterizers.cpp" />
     <ClCompile Include="RootConstants.cpp" />

@@ -113,6 +113,12 @@
     <Filter Include="[3]____________[ Util ]\[ Root Constant Util ]">
       <UniqueIdentifier>{3d47fba7-be5d-4755-87ef-afce9724eb34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="[1]____________[ Game Mode ]\[ Mode1 ]\[ Home Mode ]">
+      <UniqueIdentifier>{bef41688-92f1-44ff-b68b-6aa60bbecfaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="[1]____________[ Game Mode ]\[ Mode1 ]\[ Play Mode ]">
+      <UniqueIdentifier>{81c6efc6-e009-49ab-974a-260a0e310271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameworkUtil.h">
@@ -141,9 +147,6 @@
     </ClInclude>
     <ClInclude Include="Objective-D.h">
       <Filter>[5]____________[ WinAPI ]\[ Header ]</Filter>
-    </ClInclude>
-    <ClInclude Include="HomeMode.h">
-      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]</Filter>
     </ClInclude>
     <ClInclude Include="PickingUtil.h">
       <Filter>[3]____________[ Util ]\[ Picking Util ]</Filter>
@@ -208,6 +211,12 @@
     <ClInclude Include="Help.h">
       <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
     </ClInclude>
+    <ClInclude Include="HomeMode.h">
+      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]\[ Home Mode ]</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayMode.h">
+      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]\[ Play Mode ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkUtil.cpp">
@@ -243,9 +252,6 @@
     </ClCompile>
     <ClCompile Include="TerrainUtil.cpp">
       <Filter>[3]____________[ Util ]\[ Terrain Util ]</Filter>
-    </ClCompile>
-    <ClCompile Include="HomeMode.cpp">
-      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]</Filter>
     </ClCompile>
     <ClCompile Include="TransformUtil.cpp">
       <Filter>[3]____________[ Util ]\[ Transform Util ]</Filter>
@@ -297,6 +303,12 @@
     </ClCompile>
     <ClCompile Include="CameraUtil.cpp">
       <Filter>[3]____________[ Util ]\[ Camera Util ]</Filter>
+    </ClCompile>
+    <ClCompile Include="HomeMode.cpp">
+      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]\[ Home Mode ]</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayMode.cpp">
+      <Filter>[1]____________[ Game Mode ]\[ Mode1 ]\[ Play Mode ]</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

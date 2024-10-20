@@ -27,6 +27,9 @@ void HomeMode::KeyboardController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPA
 	if (nMessageID == WM_KEYDOWN && wParam == VK_ESCAPE)
 		// 프로그램을 종료하는 프레임워크 멤버 함수
 		framework.Exit();
+
+	if (auto help = framework.Find("help"); help)
+		help->InputKey(hWnd, nMessageID, wParam, lParam);
 }
 
 //  마우스 모션을 지정된 객체 포인터로 전달한다
