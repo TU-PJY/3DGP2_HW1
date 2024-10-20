@@ -166,7 +166,7 @@ void Camera::SetCameraMode(CamMode ModeValue) {
 }
 
 // 카메라의 위치를 변경한다.
-void Camera::Move(float X, float Y, float Z) {
+void Camera::SetPosition(float X, float Y, float Z) {
 	Position.x = X;
 	Position.y = Y;
 	Position.z = Z;
@@ -181,6 +181,12 @@ void Camera::MoveForward(float MoveDistance) {
 	Position.z += NormlaizedLook.z * MoveDistance;
 }
 
+//// 현재 시점에서 높이 변화 없이 앞으로 움직인다.
+void Camera::MoveForwardWithoutHeight(float MoveDistance) {
+	Position.x += sin(Yaw) * MoveDistance;
+	Position.z += cos(Yaw) * MoveDistance;
+}
+
 // 현재 시점에서 옆으로 움직인다.
 void Camera::MoveStrafe(float MoveDistance) {
 	XMFLOAT3 NormlaizedRight = Vec3::Normalize(Right);
@@ -188,6 +194,12 @@ void Camera::MoveStrafe(float MoveDistance) {
 	Position.x += NormlaizedRight.x * MoveDistance;
 	Position.y += NormlaizedRight.y * MoveDistance;
 	Position.z += NormlaizedRight.z * MoveDistance;
+}
+
+// 현재 시점에서 높이 변화 없이 옆으로 움직인다.
+void Camera::MoveStrafeWithoutHeight(float MoveDistance) {
+	Position.x += cos(Yaw) * MoveDistance;
+	Position.z -= sin(Yaw) * MoveDistance;
 }
 
 // 수직으로 움직인다.
@@ -360,7 +372,7 @@ bool Camera::IsInFrustum(BoundingOrientedBox& BoundingBox) {
 }
 
 // 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
-void Camera::Move(XMFLOAT3 PositionValue) { Position = PositionValue; }
+void Camera::SetPosition(XMFLOAT3 PositionValue) { Position = PositionValue; }
 XMFLOAT3& Camera::GetPosition() { return(Position); }
 void Camera::SetLookAtPosition(XMFLOAT3 LookAtValue) { LookAt = LookAtValue; }
 XMFLOAT3& Camera::GetLookAtPosition() { return(LookAt); }

@@ -16,35 +16,17 @@ public:
 		switch (nMessageID) {
 		case WM_KEYDOWN:
 			switch (wParam) {
-			case 'W':
-				MoveForward = true;
-				break;
-
-			case 'A':
-				MoveLeft = true;
-				break;
-
-			case 'S':
-				MoveBackward = true;
-				break;
-
-			case 'D':
-				MoveRight = true;
-				break;
-
-			case VK_SPACE:
-				MoveUp = true;
-				break;
-
-			case VK_CONTROL:
-				MoveDown = true;
-				break;
-
-
+			case 'W': MoveForward = true; break;
+			case 'A': MoveLeft = true; break;
+			case 'S': MoveBackward = true; break;
+			case 'D': MoveRight = true; break;
+			case VK_SPACE: MoveUp = true; break;
+			case VK_CONTROL: MoveDown = true; break;
+				
 			case VK_F2:  // 관전 모드로 변경한다.
 				camera.SetCameraMode(CamMode::SPECTOR_MODE);
 				// 마지막으로 기억한 위치로 카메라를 이동시킨다.
-				camera.Move(CamPosition);
+				camera.SetPosition(CamPosition);
 				break;
 
 			case VK_F1:  // 일반 모드로 변경한다.
@@ -55,29 +37,12 @@ public:
 
 		case WM_KEYUP:
 			switch (wParam) {
-			case 'W':
-				MoveForward = false;
-				break;
-
-			case 'A':
-				MoveLeft = false;
-				break;
-
-			case 'S':
-				MoveBackward = false;
-				break;
-
-			case 'D':
-				MoveRight = false;
-				break;
-
-			case VK_SPACE:
-				MoveUp = false;
-				break;
-
-			case VK_CONTROL:
-				MoveDown = false;
-				break;
+			case 'W': MoveForward = false; break;
+			case 'A': MoveLeft = false; break;
+			case 'S': MoveBackward = false; break;
+			case 'D': MoveRight = false; break;
+			case VK_SPACE: MoveUp = false; break;
+			case VK_CONTROL: MoveDown = false; break;
 			}
 			break;
 		}
@@ -117,17 +82,17 @@ public:
 		// 관점 모드에서만 동작한다.
 		if (camera.Mode == CamMode::SPECTOR_MODE) {
 			if (MoveForward)
-				camera.MoveForward(FT * 15);
+				camera.MoveForwardWithoutHeight(FT * 40);
 			if (MoveBackward)
-				camera.MoveForward(-FT * 15);
+				camera.MoveForwardWithoutHeight(-FT * 40);
 			if (MoveRight)
-				camera.MoveStrafe(FT * 15);
+				camera.MoveStrafeWithoutHeight(FT * 40);
 			if (MoveLeft)
-				camera.MoveStrafe(-FT * 15);
+				camera.MoveStrafeWithoutHeight(-FT * 40);
 			if (MoveDown)
-				camera.MoveVertical(-FT * 10);
+				camera.MoveVertical(-FT * 40);
 			if (MoveUp)
-				camera.MoveVertical(FT * 10);
+				camera.MoveVertical(FT * 40);
 
 			camera.Rotate(CamRotation.x, CamRotation.y, 0.0);
 
