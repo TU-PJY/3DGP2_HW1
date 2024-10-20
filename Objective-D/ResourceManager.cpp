@@ -53,7 +53,7 @@ void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList
 	////////////////////////////////
 
 	// Play Mode
-	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.txt", MeshType::Text);
+	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.bin", MeshType::Binary);
 }
 
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
@@ -69,5 +69,5 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	EnterTex = new Texture(Device, CmdList, L"Resources//Image//press_enter.png");
 
 	// play mode
-	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.png");
+	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg");
 }

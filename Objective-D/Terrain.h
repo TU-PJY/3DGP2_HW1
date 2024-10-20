@@ -10,8 +10,9 @@ private:
 public:
 	void Render(CommandList CmdList) {
 		InitMatrix(CmdList, RenderType::Pers);
-		Transform::Scale(ScaleMatrix, 0.3, 0.3, 0.3);
-		Transform::Move(TranslateMatrix,  0.0, -10.0, 0.0);
+		Transform::Scale(ScaleMatrix, 10.3, 10.3, 10.3);
+		Transform::Rotate(RotateMatrix, -90.0, 180.0, 0.0);
+		Transform::Move(TranslateMatrix,  0.0, -5.0, 0.0);
 		BindTexture(CmdList, TerrainTex);
 		UseShader(CmdList, BasicShader);
 		RenderMesh(CmdList, TerrainMesh);
