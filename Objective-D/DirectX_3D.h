@@ -42,6 +42,9 @@ enum class RenderType
 extern int SCREEN_WIDTH, SCREEN_HEIGHT;
 extern int PREV_WIDTH, PREV_HEIGHT;
 
+// Àü¿ª hwnd
+extern HWND MainHWND;
+
 // screen size
 #define ASPECT_RATIO (float(SCREEN_WIDTH) / float(SCREEN_HEIGHT))
 

@@ -9,7 +9,7 @@ public:
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
 	bool MoveUp{}, MoveDown{};
 
-	XMFLOAT3 CamPosition{};  // 카메라 위치 기억용
+	XMFLOAT3 CamPosition{0.0, 30.0, 0.0};  // 카메라 위치 기억용
 	XMFLOAT3 CamRotation{};
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
@@ -49,31 +49,16 @@ public:
 	}
 
 	void InputMouseMotion(HWND hWnd, POINT PrevCursorPos) {
-		if (camera.Mode == CamMode::SPECTOR_MODE) {
-			if (mouse.LBUTTONDOWN && GetCapture() == hWnd) {
-				mouse.HideCursor();
-				GetCapture();
+		if (GetCapture() == hWnd) {
+			mouse.HideCursor();
+			float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
+			float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
+			mouse.SetPositionToPrev(PrevCursorPos);
 
-				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
-				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
-				mouse.SetPositionToPrev(PrevCursorPos);
-
-				CamRotation.x += cyDelta * 0.008;
-				CamRotation.y += cxDelta * 0.008;
-			}
-		}
-	}
-
-	void InputMouseButton(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
-		if (camera.Mode == CamMode::SPECTOR_MODE) {
-			switch (nMessageID) {
-			case WM_LBUTTONDOWN:
-				mouse.CaptureMotion(hWnd);
-				break;
-
-			case WM_LBUTTONUP:
-				mouse.ReleaseMotion();
-				break;
+			// 관전 모드에서만 동작
+			if (camera.Mode == CamMode::SPECTOR_MODE) {
+				CamRotation.x += cyDelta * 0.003;
+				CamRotation.y += cxDelta * 0.003;
 			}
 		}
 	}
@@ -89,10 +74,10 @@ public:
 				camera.MoveStrafeWithoutHeight(FT * 40);
 			if (MoveLeft)
 				camera.MoveStrafeWithoutHeight(-FT * 40);
-			if (MoveDown)
-				camera.MoveVertical(-FT * 40);
 			if (MoveUp)
 				camera.MoveVertical(FT * 40);
+			if (MoveDown)
+				camera.MoveVertical(-FT * 40);
 
 			camera.Rotate(CamRotation.x, CamRotation.y, 0.0);
 

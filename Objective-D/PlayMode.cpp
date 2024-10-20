@@ -10,6 +10,7 @@ void PlayMode::Start() {
 	
 	framework.AddObject(new Terrain, "terrain", Layer::L1);
 	framework.AddObject(new CameraController, "cam_controller", Layer::L1);
+	mouse.CaptureMotion(MainHWND);
 
 	framework.RegisterKeyController(KeyboardController);
 	framework.RegisterMouseController(MouseController);

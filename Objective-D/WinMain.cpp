@@ -14,6 +14,8 @@ int SCREEN_WIDTH = START_UP_WIDTH;
 int SCREEN_HEIGHT = START_UP_HEIGHT;
 int PREV_WIDTH, PREV_HEIGHT;
 
+HWND MainHWND;
+
 DirectX_3D_Main D3D_Main;
 
 // 프레임워크, 카메라, 마우스유틸, 터레인 유틸은 전역 객체이다. 즉, 해당되는 헤더파일만 포함하면 어디서든지 사용 가능하다
@@ -103,7 +105,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 
 	AdjustWindowRect(&Rect, WindowStyle, FALSE);
 
-	HWND MainWnd = CreateWindow(
+	MainHWND = CreateWindow(
 		WindowClass,
 		Title,
 		WindowStyle,
@@ -117,17 +119,17 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 		NULL
 	);
 
-	if (!MainWnd)
+	if (!MainHWND)
 		return(FALSE);
 
-	D3D_Main.Create(hInstance, MainWnd);
+	D3D_Main.Create(hInstance, MainHWND);
 
-	::ShowWindow(MainWnd, nCmdShow);
-	::UpdateWindow(MainWnd);
+	::ShowWindow(MainHWND, nCmdShow);
+	::UpdateWindow(MainHWND);
 
 	// Config.h에서 전체화면 모드를 활성화 했을 경우 바로 전체화면으로 전환된다
 	if (!START_WITH_FULL_SCREEN)
-		D3D_Main.SwitchToWindowMode(MainWnd);
+		D3D_Main.SwitchToWindowMode(MainHWND);
 
 	return(TRUE);
 }
