@@ -25,7 +25,7 @@ void DirectX_3D_Main::Init() {
 	camera.SetScissorRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	camera.SetTimeLag(0.0f);
 	camera.InitStaticMatrix();
-	camera.SetCameraMode(CamMode::MODE1);
+	camera.SetCameraMode(CamMode::DEFAULT_MODE);
 
 	CmdList->Close();
 	ID3D12CommandList* CmdLists[] = { CmdList };

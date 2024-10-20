@@ -11,6 +11,16 @@ Texture* LineTex;
 Mesh* BoundMesh;
 ////////////////////////////////
 
+// 도움말 이미지
+Texture* HelpTex;
+
+// 스크롤 안내 이미지
+Texture* ArrowTex;
+Texture* ScrollHelpTex;
+
+// 시작 안내 텍스트
+Texture* EnterTex;
+
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
 	// 파이프라인 생성이 곧 쉐이더 설정의 마무리이다.
@@ -50,4 +60,8 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	LineTex = new Texture(Device, CmdList, L"Resources//Image//line_tex.png");
 	////////////////////////////////
 
+	HelpTex = new Texture(Device, CmdList, L"Resources//Image//help.png");
+	ArrowTex = new Texture(Device, CmdList, L"Resources//Image//arrow.png");
+	ScrollHelpTex = new Texture(Device, CmdList, L"Resources//Image//scroll_help.png");
+	EnterTex = new Texture(Device, CmdList, L"Resources//Image//press_enter.png");
 }

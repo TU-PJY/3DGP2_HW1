@@ -20,6 +20,16 @@ extern Mesh* SkyboxMesh;
 extern Mesh* BoundMesh;
 //////////////////////////////////
 
+// 도움말 표시 이미지
+extern Texture* HelpTex;
+
+// 스크롤 안내 이미지
+extern Texture* ArrowTex;
+extern Texture* ScrollHelpTex;
+
+// 시작 안내 텍스트
+extern Texture* EnterTex;
+
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
 void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);

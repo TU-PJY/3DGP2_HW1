@@ -142,7 +142,7 @@
     <ClInclude Include="Objective-D.h">
       <Filter>[5]____________[ WinAPI ]\[ Header ]</Filter>
     </ClInclude>
-    <ClInclude Include="Mode1.h">
+    <ClInclude Include="HomeMode.h">
       <Filter>[1]____________[ Game Mode ]\[ Mode1 ]</Filter>
     </ClInclude>
     <ClInclude Include="PickingUtil.h">
@@ -205,6 +205,9 @@
     <ClInclude Include="CameraUtil.h">
       <Filter>[3]____________[ Util ]\[ Camera Util ]</Filter>
     </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkUtil.cpp">
@@ -241,7 +244,7 @@
     <ClCompile Include="TerrainUtil.cpp">
       <Filter>[3]____________[ Util ]\[ Terrain Util ]</Filter>
     </ClCompile>
-    <ClCompile Include="Mode1.cpp">
+    <ClCompile Include="HomeMode.cpp">
       <Filter>[1]____________[ Game Mode ]\[ Mode1 ]</Filter>
     </ClCompile>
     <ClCompile Include="TransformUtil.cpp">

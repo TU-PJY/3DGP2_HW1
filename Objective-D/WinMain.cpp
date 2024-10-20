@@ -170,6 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lPara
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
+	case WM_MOUSEWHEEL:
 		framework.InputMouseButton(hWnd, nMessageID, wParam, lParam);
 		break;
 

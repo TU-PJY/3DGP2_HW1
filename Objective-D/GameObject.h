@@ -63,6 +63,7 @@ public:
 	virtual void ReleaseShaderVariables() {}
 	virtual void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {}
 	virtual void InputMouseButton(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {}
+	virtual void InputMouseWheel(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {}
 	virtual void InputMouseMotion(HWND hWnd, POINT PrevCursorPos) {}
 	virtual void Update(float FT) {}
 	virtual void Render(CommandList CmdList) {}
