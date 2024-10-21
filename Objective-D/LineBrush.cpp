@@ -38,10 +38,10 @@ void LineBrush::Draw(ID3D12GraphicsCommandList* CmdList, float X1, float Y1, flo
 	TransparencyValue = Alpha;
 
 	Length = Math::CalcDistance2D(X1, Y1, X2, Y2);
-	Rotation = Math::CalcDegree2D(X1, Y1, X2, Y2);
+	HeliRotation = Math::CalcDegree2D(X1, Y1, X2, Y2);
 
 	Transform::Move(TranslateMatrix, X1, Y1, 0.0);
-	Transform::Rotate(TranslateMatrix, Rotation, 0.0, 0.0, 1.0);
+	Transform::Rotate(TranslateMatrix, HeliRotation, 0.0, 0.0, 1.0);
 	Transform::Move(TranslateMatrix, Length / 2.0, 0.0, 0.0);
 	Transform::Scale(ScaleMatrix, Width + Length, Width, 1.0);
 

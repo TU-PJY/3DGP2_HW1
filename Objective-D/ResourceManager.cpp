@@ -21,6 +21,9 @@ Texture* EnterTex; // 시작 안내 텍스트
 Mesh* TerrainMesh; // 터레인 매쉬
 Texture* TerrainTex; // 터레인 텍스처
 Texture* TreeTex; // 나무 빌보드 텍스처
+Mesh* HelicopterBodyMesh; // 헬리콥터 몸체 부분
+Mesh* HelicopterWingMesh; // 헬리콥터 날개 부분
+Texture* HelicopterTex; // 헬리콥터 텍스처
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
@@ -55,6 +58,8 @@ void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList
 
 	// Play Mode
 	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.bin", MeshType::Binary);
+	HelicopterBodyMesh = new Mesh(Device, CmdList, "Resources//Models//Gunship.bin", MeshType::Binary);
+	HelicopterWingMesh = new Mesh(Device, CmdList, "Resources//Models//Rotor.bin", MeshType::Binary);
 }
 
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
@@ -72,4 +77,5 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	// play mode
 	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg");
 	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png");
+	HelicopterTex = new Texture(Device, CmdList, L"Resources//Image//GunShip.png");
 }

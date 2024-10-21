@@ -6,6 +6,7 @@
 #include "CameraController.h"
 #include "Terrain.h"
 #include "Tree.h"
+#include "Helicopter.h"
 
 
 void PlayMode::Start() {
@@ -13,6 +14,7 @@ void PlayMode::Start() {
 	
 	framework.AddObject(new CameraController, "cam_controller", Layer::L1);
 	framework.AddObject(new Terrain, "terrain", Layer::L1);
+	framework.AddObject(new Helicopter, "helicopter", Layer::L1);
 
 	std::random_device rd{};
 	std::uniform_real_distribution<float> DistX(-70.0, 70.0);
@@ -45,6 +47,9 @@ void PlayMode::KeyboardController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPA
 
 	if (auto cam_controller = framework.Find("cam_controller"); cam_controller)
 		cam_controller->InputKey(hWnd, nMessageID, wParam, lParam);
+
+	if (auto helicopter = framework.Find("helicopter"); helicopter)
+		helicopter->InputKey(hWnd, nMessageID, wParam, lParam);
 }
 
 void PlayMode::MouseMotionController(HWND hWnd) {
@@ -52,6 +57,9 @@ void PlayMode::MouseMotionController(HWND hWnd) {
 
 	if (auto cam_controller = framework.Find("cam_controller"); cam_controller)
 		cam_controller->InputMouseMotion(hWnd, mouse.PrevCursorPos);
+
+	if (auto helicopter = framework.Find("helicopter"); helicopter)
+		helicopter->InputMouseMotion(hWnd, mouse.PrevCursorPos);
 }
 
 void PlayMode::MouseController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {

@@ -30,6 +30,9 @@ extern Texture* EnterTex; // 시작 안내 텍스트
 extern Mesh* TerrainMesh; // 터레인 매쉬
 extern Texture* TerrainTex; // 터레인 텍스처
 extern Texture* TreeTex; // 나무 빌보드 텍스처
+extern Mesh* HelicopterBodyMesh; // 헬리콥터 몸체 부분
+extern Mesh* HelicopterWingMesh; // 헬리콥터 날개 부분
+extern Texture* HelicopterTex; // 헬리콥터 텍스처
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
 void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);

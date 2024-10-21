@@ -226,6 +226,9 @@
     <ClInclude Include="Tree.h">
       <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
     </ClInclude>
+    <ClInclude Include="Helicopter.h">
+      <Filter>[2]____________[ Object ]\[2] [ CustomObject ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkUtil.cpp">

@@ -8,7 +8,7 @@ public:
 	XMFLOAT3 LineColor{};
 	float TransparencyValue{ 1.0f };
 
-	float Length{}, Rotation{};
+	float Length{}, HeliRotation{};
 
 	// 선의 색상을 지정한다.
 	void SetColor(float R, float G, float B);

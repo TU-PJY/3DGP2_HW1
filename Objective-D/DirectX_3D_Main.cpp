@@ -20,10 +20,10 @@ void DirectX_3D_Main::Init() {
 
 	// 카메라 초기 설정(완전 초기값)
 	camera.SetPosition(XMFLOAT3(0.0, 0.0, 0.0));
-	camera.SetOffset(XMFLOAT3(0.0f, 0.0f, 0.0f));
+	camera.SetOffset(XMFLOAT3(0.0f, 15.0f, -20.0f));
 	camera.SetViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f);
 	camera.SetScissorRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	camera.SetTimeLag(0.0f);
+	camera.SetTimeLag(0.5f);
 	camera.InitStaticMatrix();
 	camera.SetCameraMode(CamMode::DEFAULT_MODE);
 

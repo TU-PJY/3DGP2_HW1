@@ -8,6 +8,8 @@
 void Camera::Update(float FT) {
 	switch (Mode) {
 	case CamMode::DEFAULT_MODE:
+		if (auto helicopter = framework.Find("helicopter"); helicopter)
+			Track(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), FT);
 		break;
 	case CamMode::SPECTOR_MODE:
 		break;
