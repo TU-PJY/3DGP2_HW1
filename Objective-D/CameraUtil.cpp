@@ -7,7 +7,7 @@
 // 예) 카메라 추적 대상 변경, 카메라 시점 변경 등
 void Camera::Update(float FT) {
 	switch (Mode) {
-	case CamMode::DEFAULT_MODE:
+	case CamMode::TRACK_MODE:
 		if (auto helicopter = framework.Find("helicopter"); helicopter)
 			Track(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), FT);
 		break;
@@ -262,7 +262,21 @@ void Camera::Track(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec
 		MoveDistance = Length;
 
 	Position = Vec3::Add(Position, Direction, MoveDistance);
-	SetLookAt(ObjectPosition, UpVec);
+
+	// 로컬 좌표계에서 LookAtPosition 조정
+	XMFLOAT3 LookAtPosition = ObjectPosition;
+
+	// 로컬 좌표계를 기준으로 x축(오른쪽), y축(위쪽), z축(앞쪽)으로 오프셋 적용
+	float offsetX = 5.0f;  // 오른쪽으로 이동 (x축)
+	float offsetY = 2.0f;   // 위쪽으로 이동 (y축)
+	float offsetZ = 0.0f;   // z축으로 이동하지 않음
+
+	// 로컬 좌표계를 기준으로 오프셋 적용
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, offsetX));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, offsetY));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, offsetZ));
+
+	SetLookAt(LookAtPosition, UpVec);
 }
 
 // 카메라가 바라보는 방향을 설정한다. Track에서 실행되므로 보통의 경우 직접 쓸 일은 없다.

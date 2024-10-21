@@ -158,6 +158,7 @@
     <ClInclude Include="CBVUtil.h" />
     <ClInclude Include="CollisionUtil.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Crosshair.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DirectX_3D_Main.h" />
     <ClInclude Include="GameObject.h" />

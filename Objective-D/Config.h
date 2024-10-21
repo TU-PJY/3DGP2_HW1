@@ -4,7 +4,7 @@
 // 카메라 모드 설정
 // 카메라 클래스 멤버 함수 Update(float FT)에서 실행할 때 사용하는 열거형 클래스이다. 카메라 클래스에서 자세히 설명하도록 한다.
 enum class CamMode
-{ DEFAULT_MODE, SPECTOR_MODE };
+{ TRACK_MODE, SPECTOR_MODE };
 
 // 프로그램 시작 시 사용할 윈도우 사이즈를 설정한다.
 constexpr int START_UP_WIDTH = 2560;

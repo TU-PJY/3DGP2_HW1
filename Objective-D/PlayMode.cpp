@@ -7,6 +7,7 @@
 #include "Terrain.h"
 #include "Tree.h"
 #include "Helicopter.h"
+#include "Crosshair.h"
 
 
 void PlayMode::Start() {
@@ -15,6 +16,7 @@ void PlayMode::Start() {
 	framework.AddObject(new CameraController, "cam_controller", Layer::L1);
 	framework.AddObject(new Terrain, "terrain", Layer::L1);
 	framework.AddObject(new Helicopter, "helicopter", Layer::L1);
+	framework.AddObject(new Crosshair, "crosshair", Layer::L3);
 
 	std::random_device rd{};
 	std::uniform_real_distribution<float> DistX(-70.0, 70.0);

@@ -18,7 +18,10 @@ private:
 	XMFLOAT3 DestRotation{};
 
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
-	float Speed = 10.0;
+	float ForwardSpeed{};
+	float StrafeSpeed{};
+
+	XMFLOAT3 Tilt{};
 
 public:
 	XMFLOAT3 GetUp() { return Vec.Up; }
@@ -31,7 +34,7 @@ public:
 	}
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
-		if (camera.Mode == CamMode::DEFAULT_MODE) {
+		if (camera.Mode == CamMode::TRACK_MODE) {
 			switch (nMessageID) {
 			case WM_KEYDOWN:
 				switch (wParam) {
@@ -58,7 +61,7 @@ public:
 			mouse.HideCursor();
 
 			// 관전 모드에서만 동작
-			if (camera.Mode == CamMode::DEFAULT_MODE) {
+			if (camera.Mode == CamMode::TRACK_MODE) {
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
 				mouse.SetPositionToPrev(PrevCursorPos);
@@ -77,29 +80,62 @@ public:
 		// 날개 회전
 		WingRotation += FT * 2000;
 
-		if (DestRotation.x < -60.0)
-			DestRotation.x = -60.0;
+		// 헬리콥터 회전 각도 제한
+		if (DestRotation.x < -50.0)
+			DestRotation.x = -50.0;
 
-		if (DestRotation.x > 60.0)
-			DestRotation.x = 60.0;
+		if (DestRotation.x > 50.0)
+			DestRotation.x = 50.0;
 
+		// 방향에 해당하는 키를 누르면 속도를 음수 또는 양수로 증가
+		// 이동 방향으로 몸체를 기울인다.
 		if (MoveForward) {
-			Position.x += sin(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
-			Position.z += cos(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
+			ForwardSpeed = std::lerp(ForwardSpeed, 10.0, FT);
+			Tilt.x = std::lerp(Tilt.x, 15.0, FT);
 		}
 		if (MoveBackward) {
-			Position.x -= sin(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
-			Position.z -= cos(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
+			ForwardSpeed = std::lerp(ForwardSpeed, -10.0, FT);
+			Tilt.x = std::lerp(Tilt.x, -15.0, FT);
 		}
 		if (MoveRight) {
-			Position.x += cos(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
-			Position.z -= sin(XMConvertToRadians(HeliRotation.y)) * Speed * FT;
+			StrafeSpeed = std::lerp(StrafeSpeed, 8.0, FT);
+			Tilt.z = std::lerp(Tilt.z, -15.0, FT);
 		}
 		if (MoveLeft) {
-			Position.x += cos(XMConvertToRadians(HeliRotation.y)) * -Speed * FT;
-			Position.z -= sin(XMConvertToRadians(HeliRotation.y)) * -Speed * FT;
+			StrafeSpeed = std::lerp(StrafeSpeed, -8.0, FT);
+			Tilt.z = std::lerp(Tilt.z, 15.0, FT);
 		}
 
+
+		// 두 키를 동시에 누르거나 둘 다 누르지 않으면 속도를 감소시킨다.
+		if ((!MoveForward && !MoveBackward) || (MoveForward && MoveBackward)) {
+			ForwardSpeed = std::lerp(ForwardSpeed, 0.0, FT);
+			Tilt.x = std::lerp(Tilt.x, 0.0, FT);
+		}
+
+		if ((MoveRight && MoveLeft) || (!MoveRight && !MoveLeft)) {
+			StrafeSpeed = std::lerp(StrafeSpeed, 0.0, FT);
+			Tilt.z = std::lerp(Tilt.z, 0.0, FT);
+		}
+		
+		// 이동
+		Position.x += sin(XMConvertToRadians(HeliRotation.y)) * ForwardSpeed * FT;
+		Position.z += cos(XMConvertToRadians(HeliRotation.y)) * ForwardSpeed * FT;
+		Position.x += cos(XMConvertToRadians(HeliRotation.y)) * StrafeSpeed * FT;
+		Position.z -= sin(XMConvertToRadians(HeliRotation.y)) * StrafeSpeed * FT;
+
+		// 이동 범위 제한, 맵 밖으로 나갈 수 없다.
+		if (Position.x > 95.0)
+			Position.x = 95.0;
+		else if (Position.x < -95.0)
+			Position.x = -95.0;
+
+		if (Position.z > 95.0)
+			Position.z = 95.0;
+		else if (Position.z < -95.0)
+			Position.z = -95.0;
+
+		// 헬리콥터 부드러운 회전
 		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT);
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT);
 	}
@@ -110,7 +146,7 @@ public:
 		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
 
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
-		Transform::Rotate(TranslateMatrix, 0.0, HeliRotation.y, 0.0);
+		Transform::Rotate(TranslateMatrix, Tilt.x, HeliRotation.y, Tilt.z);
 		Transform::Rotate(TranslateMatrix, HeliRotation.x, 0.0, 0.0);
 
 		FlipTexture(CmdList, false, true);
@@ -125,7 +161,7 @@ public:
 		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
 
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
-		Transform::Rotate(TranslateMatrix, 0.0, HeliRotation.y, 0.0);
+		Transform::Rotate(TranslateMatrix, Tilt.x, HeliRotation.y, Tilt.z);
 		Transform::Rotate(TranslateMatrix, HeliRotation.x, 0.0, 0.0);
 
 		Transform::Move(TranslateMatrix, 0.0, 2.0, 0.0);

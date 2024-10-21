@@ -31,7 +31,7 @@ public:
 				break;
 
 			case VK_F1:  // 일반 모드로 변경한다.
-				camera.SetCameraMode(CamMode::DEFAULT_MODE);
+				camera.SetCameraMode(CamMode::TRACK_MODE);
 				break;
 			}
 			break;

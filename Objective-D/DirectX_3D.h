@@ -74,6 +74,10 @@ namespace Vec3 {
 		return(xmf3Result);
 	}
 
+	inline XMFLOAT3 Scale(const XMFLOAT3& vector, float scalar) {
+		return XMFLOAT3(vector.x * scalar, vector.y * scalar, vector.z * scalar);
+	}
+
 	inline XMFLOAT3 Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2) {
 		XMFLOAT3 xmf3Result;
 		XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + XMLoadFloat3(&xmf3Vector2));
