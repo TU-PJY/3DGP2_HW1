@@ -95,6 +95,7 @@ public:
 		// 이미지 출력용 이미지 패널 매쉬 렌더링
 		RenderMesh(CmdList, ImagePannel);
 
+
 		// 스크롤 안내 텍스트
 		InitMatrix(CmdList, RenderType::Ortho);
 		SetToImageMode(CmdList);

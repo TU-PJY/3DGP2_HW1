@@ -4,13 +4,14 @@
 #include "RootConstantUtil.h"
 
 // Config.h 에서 작성한 모드에 따라 카메라가 다르게 동작하도록 작성할 수 있다.
-// 예) 카메라 추적 대상 변경, 카메라 시점 변경 등
 void Camera::Update(float FT) {
 	switch (Mode) {
+		// 추적 모드애서는 헬리콥터 객체를 추적한다.
 	case CamMode::TRACK_MODE:
 		if (auto helicopter = framework.Find("helicopter"); helicopter)
 			Track(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), FT);
 		break;
+
 	case CamMode::SPECTOR_MODE:
 		break;
 	}
