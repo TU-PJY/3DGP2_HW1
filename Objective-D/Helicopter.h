@@ -17,6 +17,8 @@ private:
 	XMFLOAT3 HeliRotation{};
 	XMFLOAT3 DestRotation{};
 
+	XMFLOAT4X4 HeadMatrix{}; // 몸통의 기초 변환 결과를 저장하여 날개 변환으로 전달한다.
+
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
 	float ForwardSpeed{};
 	float StrafeSpeed{};
@@ -143,8 +145,8 @@ public:
 	void Render(CommandList CmdList) {
 		// 헬기 몸통
 		InitMatrix(CmdList, RenderType::Pers);
-		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
 
+		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
 		Transform::Rotate(TranslateMatrix, Tilt.x, HeliRotation.y, Tilt.z);
 		Transform::Rotate(TranslateMatrix, HeliRotation.x, 0.0, 0.0);
@@ -154,23 +156,10 @@ public:
 		UseShader(CmdList, BasicShader);
 		RenderMesh(CmdList, HelicopterBodyMesh);
 
-
-
 		// 헬기 날개
-		InitMatrix(CmdList, RenderType::Pers);
-		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
-
-		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
-		Transform::Rotate(TranslateMatrix, Tilt.x, HeliRotation.y, Tilt.z);
-		Transform::Rotate(TranslateMatrix, HeliRotation.x, 0.0, 0.0);
-
+		// 날개 파츠만의 별도의 변환을 진행한다.
 		Transform::Move(TranslateMatrix, 0.0, 2.0, 0.0);
-
 		Transform::Rotate(TranslateMatrix, 0.0, WingRotation, 0.0);
-
-		FlipTexture(CmdList, false, true);
-		BindTexture(CmdList, HelicopterTex);
-		UseShader(CmdList, BasicShader);
 		RenderMesh(CmdList, HelicopterWingMesh);
 
 		// 벡터 업데이트

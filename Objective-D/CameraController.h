@@ -10,7 +10,10 @@ private:
 	bool MoveUp{}, MoveDown{};
 
 	XMFLOAT3 CamPosition{0.0, 30.0, 0.0};  // 카메라 위치 기억용
+
+	// 카메라 회전
 	XMFLOAT3 CamRotation{};
+	XMFLOAT3 DestCamRotation{};
 
 public:
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
@@ -59,8 +62,8 @@ public:
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
 				mouse.SetPositionToPrev(PrevCursorPos);
 
-				CamRotation.x += cyDelta * 0.003;
-				CamRotation.y += cxDelta * 0.003;
+				DestCamRotation.x += cyDelta * 0.003;
+				DestCamRotation.y += cxDelta * 0.003;
 			}
 		}
 	}
@@ -80,6 +83,10 @@ public:
 				camera.MoveVertical(FT * 40);
 			if (MoveDown)
 				camera.MoveVertical(-FT * 40);
+
+			// 부드러운 카메라 회전
+			CamRotation.x = std::lerp(CamRotation.x, DestCamRotation.x, FT * 15);
+			CamRotation.y = std::lerp(CamRotation.y, DestCamRotation.y, FT * 15);
 
 			camera.Rotate(CamRotation.x, CamRotation.y, 0.0);
 
