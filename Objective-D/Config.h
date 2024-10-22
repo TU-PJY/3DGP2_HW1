@@ -6,10 +6,6 @@
 enum class CamMode
 { TRACK_MODE, SPECTOR_MODE };
 
-// 프로그램 시작 시 사용할 윈도우 사이즈를 설정한다.
-//constexpr int START_UP_WIDTH = 1500;
-//constexpr int START_UP_HEIGHT = 800;
-
 // 풀스크린 모드로 시작할 지를 설정한다.
 constexpr bool START_WITH_FULL_SCREEN = false;
 
