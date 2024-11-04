@@ -176,6 +176,10 @@ public:
 			ForwardSpeed = std::lerp(ForwardSpeed, 15.0, FT * 2.0);
 			Tilt.z = std::lerp(Tilt.z, -15.0 * AvoidDir, FT * 2.0);
 			Tilt.x = std::lerp(Tilt.x, 15.0, FT * 2.0);
+
+			// 크로스헤어를 빨간색으로 변경한다.
+			if (auto crosshair = scene.Find("crosshair"); crosshair)
+				crosshair->SetUnable();
 		}
 		
 		// 이동

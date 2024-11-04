@@ -71,4 +71,6 @@ public:
 	virtual XMFLOAT3 GetUp() { return {}; }
 	virtual XMFLOAT3 GetRight() { return {}; }
 	virtual XMFLOAT3 GetLook() { return {}; }
+
+	virtual void SetUnable() {}
 };
