@@ -8,7 +8,7 @@
 #include "Tree.h"
 #include "Helicopter.h"
 #include "Crosshair.h"
-
+#include "Building.h"
 
 void PlayMode::Start() {
 	SetBackgroundColor(0.7, 0.7, 0.7);
@@ -16,6 +16,7 @@ void PlayMode::Start() {
 	scene.AddObject(new CameraController, "cam_controller", LAYER_1);
 	scene.AddObject(new Terrain, "terrain", LAYER_1);
 	scene.AddObject(new Helicopter, "helicopter", LAYER_1);
+	scene.AddObject(new Building, "building", LAYER_1);
 	scene.AddObject(new Crosshair, "crosshair", LAYER_3);
 
 	std::random_device rd{};

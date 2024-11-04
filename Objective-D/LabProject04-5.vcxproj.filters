@@ -16,9 +16,6 @@
     <Filter Include="[3]____________[ Game Object ]">
       <UniqueIdentifier>{ff900b4e-0c5d-4b64-8b68-91350d32ea6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="[3]____________[ Game Object ]\[2] [ Template ]">
-      <UniqueIdentifier>{03b6b546-94f5-4152-a165-f88612df9eb3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="[4]____________[ Camera ]">
       <UniqueIdentifier>{2a8bb781-cc47-466a-bc74-8a9e1cea7d74}</UniqueIdentifier>
     </Filter>
@@ -128,6 +125,9 @@
     <Filter Include="[3]____________[ Game Object ]\[ Home Mode Object ]">
       <UniqueIdentifier>{b67f0d9c-cd9d-4faf-af16-acb990d76534}</UniqueIdentifier>
     </Filter>
+    <Filter Include="[3]____________[ Game Object ]\[0] [ Template ]">
+      <UniqueIdentifier>{03b6b546-94f5-4152-a165-f88612df9eb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.h">
@@ -161,7 +161,7 @@
       <Filter>[5]____________[ Objective-D ]\[ Util ]\[ Picking Util ]</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>[3]____________[ Game Object ]\[2] [ Template ]</Filter>
+      <Filter>[3]____________[ Game Object ]\[0] [ Template ]</Filter>
     </ClInclude>
     <ClInclude Include="CollisionUtil.h">
       <Filter>[5]____________[ Objective-D ]\[ Util ]\[ Collision Util ]</Filter>
@@ -247,6 +247,9 @@
     <ClInclude Include="CameraController.h">
       <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scene.cpp">
@@ -272,7 +275,7 @@
       <Filter>[5]____________[ Objective-D ]\[ Util ]\[ Shader Util ]</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>[3]____________[ Game Object ]\[2] [ Template ]</Filter>
+      <Filter>[3]____________[ Game Object ]\[0] [ Template ]</Filter>
     </ClCompile>
     <ClCompile Include="CollisionUtil.cpp">
       <Filter>[5]____________[ Objective-D ]\[ Util ]\[ Collision Util ]</Filter>

@@ -29,6 +29,9 @@ Mesh* HelicopterBodyMesh; // Çï¸®ÄßÅÍ ¸öÃ¼ ºÎºÐ
 Mesh* HelicopterWingMesh; // Çï¸®ÄßÅÍ ³¯°³ ºÎºÐ
 Texture* HelicopterTex; // Çï¸®ÄßÅÍ ÅØ½ºÃ³
 
+Mesh* BuildingMesh; // °Ç¹° ¸Å½¬
+Texture* BuildingTex; // °Ç¹° ÅØ½ºÃ³
+
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
@@ -68,6 +71,7 @@ void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList
 	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.bin", MESH_TYPE_BIN);
 	HelicopterBodyMesh = new Mesh(Device, CmdList, "Resources//Models//Gunship.bin", MESH_TYPE_BIN);
 	HelicopterWingMesh = new Mesh(Device, CmdList, "Resources//Models//Rotor.bin", MESH_TYPE_BIN);
+	BuildingMesh = new Mesh(Device, CmdList, "Resources//Models//house_01.bin", MESH_TYPE_BIN);
 }
 
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
@@ -86,4 +90,5 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg", TEXTURE_TYPE_WIC);
 	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png", TEXTURE_TYPE_WIC);
 	HelicopterTex = new Texture(Device, CmdList, L"Resources//Image//GunShip.png", TEXTURE_TYPE_WIC);
+	BuildingTex = new Texture(Device, CmdList, L"Resources//Image//texture_palette.png", TEXTURE_TYPE_WIC);
 }

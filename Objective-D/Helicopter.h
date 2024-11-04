@@ -10,7 +10,7 @@
 class Helicopter : public GameObject {
 private:
 	Vector Vec;
-	XMFLOAT3 Position{0.0, 40.0, 40.0};
+	XMFLOAT3 Position{0.0, 30.0, -80.0};
 
 	float WingRotation{};
 

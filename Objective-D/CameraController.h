@@ -9,7 +9,7 @@ private:
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
 	bool MoveUp{}, MoveDown{};
 
-	XMFLOAT3 CamPosition{0.0, 30.0, 0.0};  // 카메라 위치 기억용
+	XMFLOAT3 CamPosition{ 0.0, 30.0, -80.0 };
 
 	// 카메라 회전
 	XMFLOAT3 CamRotation{};
@@ -74,8 +74,6 @@ public:
 				DestCamRotation.x = 90.0;
 			else if (DestCamRotation.x < -90.0)
 				DestCamRotation.x = -90.0;
-
-			std::cout << DestCamRotation.x << std::endl;
 
 			if (MoveForward)
 				camera.MoveForwardWithoutHeight(FT * 40);
