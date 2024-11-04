@@ -58,12 +58,10 @@ public:
 
 			// 관전 모드에서만 동작
 			if (camera.CurrentMode() == CamMode::SPECTOR_MODE) {
-				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
-				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
+				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 20.0f;
+				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 20.0f;
 				mouse.UpdateMotionPosition(PrevCursorPos);
-
-				DestCamRotation.x += cyDelta * 0.003;
-				DestCamRotation.y += cxDelta * 0.003;
+				UpdateMotionRotation(DestCamRotation, cxDelta, cyDelta);
 			}
 		}
 	}
@@ -71,6 +69,14 @@ public:
 	void Update(float FT) {
 		// 관전 모드에서만 동작한다.
 		if (camera.CurrentMode() == CamMode::SPECTOR_MODE) {
+			// 상하 회전반경 제한
+			if (DestCamRotation.x > 90.0)
+				DestCamRotation.x = 90.0;
+			else if (DestCamRotation.x < -90.0)
+				DestCamRotation.x = -90.0;
+
+			std::cout << DestCamRotation.x << std::endl;
+
 			if (MoveForward)
 				camera.MoveForwardWithoutHeight(FT * 40);
 			if (MoveBackward)

@@ -23,7 +23,7 @@ void Framework::Init() {
 	camera.SetOffset(XMFLOAT3(5.0f, 5.0f, -10.0f));
 	camera.SetViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f);
 	camera.SetScissorRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	camera.SetTimeLag(0.3f);
+	camera.SetTimeLag(0.1f);
 	camera.InitStaticMatrix();
 	camera.SetCameraMode(CamMode::TRACK_MODE);
 

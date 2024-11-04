@@ -247,9 +247,9 @@ void Camera::Rotate(float X, float Y, float Z) {
 	Right = XMFLOAT3(1.0, 0.0, 0.0);
 	Up = XMFLOAT3(0.0, 1.0, 0.0);
 
-	Pitch = X;
-	Yaw = Y;
-	Roll = Z;
+	Pitch = XMConvertToRadians(X);
+	Yaw = XMConvertToRadians(Y);
+	Roll = XMConvertToRadians(Z);
 
 	// 회전 행렬 생성
 	XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(Pitch, Yaw, Roll);
@@ -350,15 +350,10 @@ void Camera::TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3
 	// 로컬 좌표계에서 LookAtPosition 조정
 	XMFLOAT3 LookAtPosition = ObjectPosition;
 
-	// 로컬 좌표계를 기준으로 x축(오른쪽), y축(위쪽), z축(앞쪽)으로 오프셋 적용
-	float offsetX = OffsetValue.x;  // 오른쪽으로 이동 (x축)
-	float offsetY = OffsetValue.y;   // 위쪽으로 이동 (y축)
-	float offsetZ = OffsetValue.z;   // z축으로 이동하지 않음
-
 	// 로컬 좌표계를 기준으로 오프셋 적용
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, offsetX));
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, offsetY));
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, offsetZ));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, OffsetValue.x));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, OffsetValue.y));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, OffsetValue.z));
 
 	SetLookAt(LookAtPosition, UpVec);
 }

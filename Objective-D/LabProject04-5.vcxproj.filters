@@ -16,9 +16,6 @@
     <Filter Include="[3]____________[ Game Object ]">
       <UniqueIdentifier>{ff900b4e-0c5d-4b64-8b68-91350d32ea6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="[3]____________[ Game Object ]\[1] [ CustomObject ]">
-      <UniqueIdentifier>{03135e75-d38d-4b93-81cb-cd9d7aad3e82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="[3]____________[ Game Object ]\[2] [ Template ]">
       <UniqueIdentifier>{03b6b546-94f5-4152-a165-f88612df9eb3}</UniqueIdentifier>
     </Filter>
@@ -125,6 +122,12 @@
     <Filter Include="[2]____________[ Game Mode ]\[ Home Mode ]">
       <UniqueIdentifier>{d2c0df24-5cd1-422c-91cd-6a96d5c2a634}</UniqueIdentifier>
     </Filter>
+    <Filter Include="[3]____________[ Game Object ]\[ Play Mode Object ]">
+      <UniqueIdentifier>{50a8996b-90c8-4310-9cb9-0358e07804e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="[3]____________[ Game Object ]\[ Home Mode Object ]">
+      <UniqueIdentifier>{b67f0d9c-cd9d-4faf-af16-acb990d76534}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.h">
@@ -220,29 +223,29 @@
     <ClInclude Include="ResourceFileLink.h">
       <Filter>[1]____________[ Game Resource ]\[1][ Resource ]</Filter>
     </ClInclude>
-    <ClInclude Include="Crosshair.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
-    <ClInclude Include="Helicopter.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
-    <ClInclude Include="Help.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
-    <ClInclude Include="Tree.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraController.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>[3]____________[ Game Object ]\[1] [ CustomObject ]</Filter>
-    </ClInclude>
     <ClInclude Include="PlayMode.h">
       <Filter>[2]____________[ Game Mode ]\[ Play Mode ]</Filter>
     </ClInclude>
     <ClInclude Include="HomeMode.h">
       <Filter>[2]____________[ Game Mode ]\[ Home Mode ]</Filter>
+    </ClInclude>
+    <ClInclude Include="Crosshair.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
+    <ClInclude Include="Helicopter.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>[3]____________[ Game Object ]\[ Home Mode Object ]</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
