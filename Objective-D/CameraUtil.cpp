@@ -169,6 +169,11 @@ void Camera::SetCameraMode(CamMode ModeValue) {
 	Mode = ModeValue;
 }
 
+// 현재 실행 중인 카메라 모드를 얻는다.
+CamMode Camera::CurrentMode() {
+	return Mode;
+}
+
 // 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
 void Camera::Move(XMFLOAT3 PositionValue) { Position = PositionValue; }
 XMFLOAT3& Camera::GetPosition() { return(Position); }

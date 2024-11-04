@@ -73,6 +73,7 @@ public:
 	void Render(CommandList CmdList) {
 		// 도움말 본문
 		// 행렬 초기화
+		// 이미지 타입으로 렌더링 시 조명이 비활성화 되고 깊이 검사를 해제한다.
 		InitMatrix(CmdList, RENDER_TYPE_IMAGE);
 
 		// 스크롤 이동

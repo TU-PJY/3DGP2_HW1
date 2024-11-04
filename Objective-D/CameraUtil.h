@@ -32,9 +32,9 @@ private:
 
 	// 활성화 시 초기 행렬이 쉐이더에 전송된다.
 	bool StaticMode{};
+	CamMode Mode{};
 
 public:
-	CamMode Mode{};
 	D3D12_VIEWPORT					Viewport{};
 	XMFLOAT4X4						ViewMatrix{};
 	XMFLOAT4X4						ProjectionMatrix{};
@@ -64,6 +64,8 @@ public:
 	void SetScissorRect(LONG xLeft, LONG yTop, LONG xRight, LONG yBottom);
 	virtual void SetViewportsAndScissorRects(ID3D12GraphicsCommandList* CmdList);
 	void SetCameraMode(CamMode GetMode);
+
+	CamMode CurrentMode();
 
 	void Move(XMFLOAT3 PositionValue);
 	XMFLOAT3& GetPosition();

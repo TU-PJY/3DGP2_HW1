@@ -16,7 +16,7 @@ public:
 
 	void Render(CommandList CmdList) {
 		// 추적 카메라일때만 출력
-		if (camera.Mode == CamMode::TRACK_MODE) {
+		if (camera.CurrentMode() == CamMode::TRACK_MODE) {
 			line.Draw(CmdList, -0.4, 0.0, -0.03, 0.0, 0.01);
 			line.Draw(CmdList, 0.03, 0.0, 0.4, 0.0, 0.01);
 			line.Draw(CmdList, 0.0, -0.03, 0.0, -0.1, 0.01);

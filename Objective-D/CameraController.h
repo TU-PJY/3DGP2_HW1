@@ -57,7 +57,7 @@ public:
 			mouse.HideCursor();
 
 			// 관전 모드에서만 동작
-			if (camera.Mode == CamMode::SPECTOR_MODE) {
+			if (camera.CurrentMode() == CamMode::SPECTOR_MODE) {
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
 				mouse.UpdateMotionPosition(PrevCursorPos);
@@ -70,7 +70,7 @@ public:
 
 	void Update(float FT) {
 		// 관전 모드에서만 동작한다.
-		if (camera.Mode == CamMode::SPECTOR_MODE) {
+		if (camera.CurrentMode() == CamMode::SPECTOR_MODE) {
 			if (MoveForward)
 				camera.MoveForwardWithoutHeight(FT * 40);
 			if (MoveBackward)

@@ -28,6 +28,10 @@ public:
 
 	void Render(CommandList CmdList) {
 		InitMatrix(CmdList, RENDER_TYPE_PERS);
+
+		// 조명 비활성화
+		DisableLight(CmdList);
+
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
 		Transform::Scale(ScaleMatrix, 10.0, 10.0, 1.0);
 

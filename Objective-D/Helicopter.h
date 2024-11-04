@@ -36,7 +36,7 @@ public:
 	}
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
-		if (camera.Mode == CamMode::TRACK_MODE) {
+		if (camera.CurrentMode() == CamMode::TRACK_MODE) {
 			switch (nMessageID) {
 			case WM_KEYDOWN:
 				switch (wParam) {
@@ -63,7 +63,7 @@ public:
 			mouse.HideCursor();
 
 			// 관전 모드에서만 동작
-			if (camera.Mode == CamMode::TRACK_MODE) {
+			if (camera.CurrentMode() == CamMode::TRACK_MODE) {
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
 				mouse.UpdateMotionPosition(PrevCursorPos);
