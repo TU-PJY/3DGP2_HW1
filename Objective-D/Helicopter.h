@@ -41,6 +41,7 @@ private:
 
 	// 벡터 계산 여부
 	bool AvoidVectorCalculated{};
+	int AvoidDir{};
 
 public:
 	XMFLOAT3 GetUp() { return Vec.Up; }
@@ -89,13 +90,35 @@ public:
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
 				mouse.UpdateMotionPosition(PrevCursorPos);
-				UpdateMotionRotation(DestRotation, cxDelta, cyDelta);
+
+				// 회피기동 상태에서는 방향을 전환할 수 없다.
+				if(!AvoidState)
+					UpdateMotionRotation(DestRotation, cxDelta, cyDelta);
 			}
 		}
 	}
 
 	void InputMouseButton(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 
+	}
+
+	bool IsRightOfTarget(const XMFLOAT3& targetPosition) {
+		// 헬리콥터 위치에서 타겟 위치까지의 방향 벡터 계산
+		XMFLOAT3 directionToTarget = XMFLOAT3(
+			targetPosition.x - Position.x,
+			targetPosition.y - Position.y,
+			targetPosition.z - Position.z
+		);
+
+		// right 벡터와 directionToTarget 벡터의 내적 계산
+		XMVECTOR rightVec = XMLoadFloat3(&Vec.Right);
+		XMVECTOR directionVec = XMLoadFloat3(&directionToTarget);
+		float dotProduct = XMVectorGetX(XMVector3Dot(rightVec, directionVec));
+
+		if (dotProduct < 0)
+			return true;
+		
+		return false;
 	}
 
 	void Update(float FT) {
@@ -111,39 +134,48 @@ public:
 
 		// 방향에 해당하는 키를 누르면 속도를 음수 또는 양수로 증가
 		// 이동 방향으로 몸체를 기울인다.
-		if (MoveForward) {
-			ForwardSpeed = std::lerp(ForwardSpeed, 10.0, FT);
-			Tilt.x = std::lerp(Tilt.x, 15.0, FT);
-		}
-		if (MoveBackward) {
-			ForwardSpeed = std::lerp(ForwardSpeed, -10.0, FT);
-			Tilt.x = std::lerp(Tilt.x, -15.0, FT);
-		}
-		if (MoveRight) {
-			StrafeSpeed = std::lerp(StrafeSpeed, 8.0, FT);
-			Tilt.z = std::lerp(Tilt.z, -15.0, FT);
-		}
-		if (MoveLeft) {
-			StrafeSpeed = std::lerp(StrafeSpeed, -8.0, FT);
-			Tilt.z = std::lerp(Tilt.z, 15.0, FT);
-		}
-		if (MoveUp) {
-			Position.y += 10 * FT;
-		}
-		if (MoveDown) {
-			Position.y -= 10 * FT;
+		if (!AvoidState) {
+			if (MoveForward) {
+				ForwardSpeed = std::lerp(ForwardSpeed, 15.0, FT);
+				Tilt.x = std::lerp(Tilt.x, 15.0, FT);
+			}
+			if (MoveBackward) {
+				ForwardSpeed = std::lerp(ForwardSpeed, -15.0, FT);
+				Tilt.x = std::lerp(Tilt.x, -15.0, FT);
+			}
+			if (MoveRight) {
+				StrafeSpeed = std::lerp(StrafeSpeed, 15.0, FT);
+				Tilt.z = std::lerp(Tilt.z, -15.0, FT);
+			}
+			if (MoveLeft) {
+				StrafeSpeed = std::lerp(StrafeSpeed, -15.0, FT);
+				Tilt.z = std::lerp(Tilt.z, 15.0, FT);
+			}
+			if (MoveUp) {
+				Position.y += 10 * FT;
+			}
+			if (MoveDown) {
+				Position.y -= 10 * FT;
+			}
+
+			// 두 키를 동시에 누르거나 둘 다 누르지 않으면 속도를 감소시킨다.
+			if ((!MoveForward && !MoveBackward) || (MoveForward && MoveBackward)) {
+				ForwardSpeed = std::lerp(ForwardSpeed, 0.0, FT);
+				Tilt.x = std::lerp(Tilt.x, 0.0, FT);
+			}
+
+			if ((MoveRight && MoveLeft) || (!MoveRight && !MoveLeft)) {
+				StrafeSpeed = std::lerp(StrafeSpeed, 0.0, FT);
+				Tilt.z = std::lerp(Tilt.z, 0.0, FT);
+			}
 		}
 
-
-		// 두 키를 동시에 누르거나 둘 다 누르지 않으면 속도를 감소시킨다.
-		if ((!MoveForward && !MoveBackward) || (MoveForward && MoveBackward)) {
-			ForwardSpeed = std::lerp(ForwardSpeed, 0.0, FT);
-			Tilt.x = std::lerp(Tilt.x, 0.0, FT);
-		}
-
-		if ((MoveRight && MoveLeft) || (!MoveRight && !MoveLeft)) {
-			StrafeSpeed = std::lerp(StrafeSpeed, 0.0, FT);
-			Tilt.z = std::lerp(Tilt.z, 0.0, FT);
+		// 회피기동 시 좀 더 빠르게 가속한다.
+		if (AvoidState) {
+			StrafeSpeed = std::lerp(StrafeSpeed, 15.0 * AvoidDir, FT * 2.0);
+			ForwardSpeed = std::lerp(ForwardSpeed, 15.0, FT * 2.0);
+			Tilt.z = std::lerp(Tilt.z, -15.0 * AvoidDir, FT * 2.0);
+			Tilt.x = std::lerp(Tilt.x, 15.0, FT * 2.0);
 		}
 		
 		// 이동
@@ -169,15 +201,27 @@ public:
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
 
 		// 건물의 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터는 회피기동을 한다.
+		// 건물 중점보다 오른쪽에 있으면 오른쪽으로, 왼쪽에 있으면 왼쪽으로 회피기동한다.
+		// 헬리콥터가 건물의 바운드박스를 벗어나기 전까지 회피기동 방향은 바뀌지 않는다.
 		if (auto building = scene.Find("building"); building && CheckCollisionState) {
-			if (oobb.CheckCollision(building->GetAABB()))
-				AvoidState = true;
-			else 
-				AvoidState = false;
-		}
+			if (oobb.CheckCollision(building->GetAABB())) {
+				if (!AvoidVectorCalculated) {  
+					if (IsRightOfTarget(XMFLOAT3(0.0, 0.0, 0.0)))
+						AvoidDir = 1;
+					else
+						AvoidDir = -1;
 
-		//if (AvoidState)
-		//	Position.y += FT * 10;
+					AvoidVectorCalculated = true;
+				}
+
+				AvoidState = true;
+			}
+
+			else {
+				AvoidState = false;
+				AvoidVectorCalculated = false;
+			}
+		}
 
 		CheckCollisionState = true;
 	}
