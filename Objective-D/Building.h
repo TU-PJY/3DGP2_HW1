@@ -7,14 +7,18 @@ private:
 	AABB aabb;
 
 public:
+	AABB GetAABB() {
+		return aabb;
+	}
+
 	Building() {
 		Transform::Scale(ScaleMatrix, 0.04, 0.04, 0.04);
-		Transform::Rotate(TranslateMatrix, -90.0, 0.0, 0.0);
+		Transform::Rotate(RotateMatrix, -90.0, 0.0, 0.0);
 		Transform::Move(TranslateMatrix, 0.0, 8.0, 0.0);
 	}
 
 	void Update(float FT) {
-
+		aabb.Update(XMFLOAT3(0.0, 8.0, 0.0), XMFLOAT3(30.0, 40.0, 30.0));
 	}
 
 	void Render(CommandList CmdList) {
@@ -26,5 +30,6 @@ public:
 		SetColor(0.0, 0.0, 0.0);
 
 		RenderMesh(CmdList, BuildingMesh, BuildingTex, ObjectShader);
+		aabb.Render(CmdList);
 	}
 };

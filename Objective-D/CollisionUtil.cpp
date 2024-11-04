@@ -58,6 +58,16 @@ void OOBB::Render(ID3D12GraphicsCommandList* CmdList) {
 #endif
 }
 
+bool OOBB::CheckCollision(const AABB& Other) {
+	if (oobb.Intersects(Other.aabb)) {
+		Collide = true;
+		return true;
+	}
+
+	Collide = false;
+	return false;
+}
+
 bool OOBB::CheckCollision(const OOBB& Other) {
 	if (oobb.Intersects(Other.oobb)) {
 		Collide = true;
@@ -131,6 +141,16 @@ void AABB::Render(ID3D12GraphicsCommandList* CmdList) {
 
 bool AABB::CheckCollision(const AABB& Other) {
 	if (aabb.Intersects(Other.aabb)) {
+		Collide = true;
+		return true;
+	}
+
+	Collide = false;
+	return false;
+}
+
+bool AABB::CheckCollision(const OOBB& Other) {
+	if (aabb.Intersects(Other.oobb)) {
 		Collide = true;
 		return true;
 	}

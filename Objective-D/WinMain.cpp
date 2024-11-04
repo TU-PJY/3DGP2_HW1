@@ -130,6 +130,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	// Config.h에서 전체화면 모드를 활성화 했을 경우 바로 전체화면으로 전환된다
 	if (!START_WITH_FULL_SCREEN)
 		framework.SwitchToWindowMode(MainHWND);
+	else
+		framework.SwitchToFullscreenMode(MainHWND);
 
 	return(TRUE);
 }

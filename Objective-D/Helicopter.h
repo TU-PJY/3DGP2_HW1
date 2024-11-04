@@ -10,20 +10,37 @@
 class Helicopter : public GameObject {
 private:
 	Vector Vec;
+	Vector AvoidVec;
 	XMFLOAT3 Position{0.0, 30.0, -80.0};
 
+	// 날개 회전 값
 	float WingRotation{};
 
+	// 헬리콘터 몸체 회전 값
 	XMFLOAT3 HeliRotation{};
 	XMFLOAT3 DestRotation{};
 
-	XMFLOAT4X4 HeadMatrix{}; // 몸통의 기초 변환 결과를 저장하여 날개 변환으로 전달한다.
-
+	// 이동 상태 및 이동 속도
 	bool MoveForward{}, MoveBackward{}, MoveRight{}, MoveLeft{};
 	float ForwardSpeed{};
 	float StrafeSpeed{};
 
+	// 상하 이동 상태
+	bool MoveUp{}, MoveDown{};
+	
+	// 헬기 기울어짐
 	XMFLOAT3 Tilt{};
+	
+	OOBB oobb;
+
+	// 회피기동 여부
+	bool AvoidState{};
+
+	// 충돌 처리 확인 여부
+	bool CheckCollisionState{}; 
+
+	// 벡터 계산 여부
+	bool AvoidVectorCalculated{};
 
 public:
 	XMFLOAT3 GetUp() { return Vec.Up; }
@@ -33,6 +50,7 @@ public:
 
 	Helicopter() {
 		Math::InitVector(Vec);
+		Math::InitVector(AvoidVec);
 	}
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
@@ -44,6 +62,8 @@ public:
 				case 'S': MoveBackward = true; break;
 				case 'A': MoveLeft = true; break;
 				case 'D': MoveRight = true; break;
+				case 'R': MoveUp = true; break;
+				case 'F': MoveDown = true; break;
 				}
 				break;
 
@@ -53,6 +73,8 @@ public:
 				case 'S': MoveBackward = false; break;
 				case 'A': MoveLeft = false; break;
 				case 'D': MoveRight = false; break;
+				case 'R': MoveUp = false; break;
+				case 'F': MoveDown = false; break;
 				}
 			}
 		}
@@ -105,6 +127,12 @@ public:
 			StrafeSpeed = std::lerp(StrafeSpeed, -8.0, FT);
 			Tilt.z = std::lerp(Tilt.z, 15.0, FT);
 		}
+		if (MoveUp) {
+			Position.y += 10 * FT;
+		}
+		if (MoveDown) {
+			Position.y -= 10 * FT;
+		}
 
 
 		// 두 키를 동시에 누르거나 둘 다 누르지 않으면 속도를 감소시킨다.
@@ -123,6 +151,7 @@ public:
 		Position.z += cos(XMConvertToRadians(HeliRotation.y)) * ForwardSpeed * FT;
 		Position.x += cos(XMConvertToRadians(HeliRotation.y)) * StrafeSpeed * FT;
 		Position.z -= sin(XMConvertToRadians(HeliRotation.y)) * StrafeSpeed * FT;
+		
 
 		// 이동 범위 제한, 맵 밖으로 나갈 수 없다.
 		if (Position.x > 95.0)
@@ -138,6 +167,19 @@ public:
 		// 헬리콥터 부드러운 회전
 		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT * 2);
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
+
+		// 건물의 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터는 회피기동을 한다.
+		if (auto building = scene.Find("building"); building && CheckCollisionState) {
+			if (oobb.CheckCollision(building->GetAABB()))
+				AvoidState = true;
+			else 
+				AvoidState = false;
+		}
+
+		//if (AvoidState)
+		//	Position.y += FT * 10;
+
+		CheckCollisionState = true;
 	}
 
 	void Render(CommandList CmdList) {
@@ -153,6 +195,9 @@ public:
 		BindTexture(CmdList, HelicopterTex);
 		RenderMesh(CmdList, HelicopterBodyMesh, HelicopterTex, ObjectShader);
 
+		// 몸통 부분의 oobb만 업데이트
+		oobb.Update(HelicopterBodyMesh, TranslateMatrix, RotateMatrix, ScaleMatrix);
+
 		// 헬기 날개
 		// 날개 파츠만의 별도의 변환을 진행한다.
 		Transform::Move(TranslateMatrix, 0.0, 2.0, 0.0);
@@ -161,5 +206,8 @@ public:
 
 		// 벡터 업데이트
 		Math::UpdateVector(Vec, HeliRotation.x, HeliRotation.y, HeliRotation.z);
+
+		// oobb 출력
+		oobb.Render(CmdList);
 	}
 };

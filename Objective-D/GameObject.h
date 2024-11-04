@@ -67,6 +67,7 @@ public:
 	virtual Mesh* GetObjectMesh() { return {}; }
 	virtual XMFLOAT3 GetPosition() { return {}; }
 	virtual OOBB GetOOBB() { return {}; }
+	virtual AABB GetAABB() { return {}; }
 	virtual XMFLOAT3 GetUp() { return {}; }
 	virtual XMFLOAT3 GetRight() { return {}; }
 	virtual XMFLOAT3 GetLook() { return {}; }
