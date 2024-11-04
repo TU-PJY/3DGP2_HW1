@@ -10,7 +10,7 @@ void Camera::Update(float FT) {
 		// 추적 모드애서는 헬리콥터 객체를 추적한다.
 	case CamMode::TRACK_MODE:
 		if (auto helicopter = scene.Find("helicopter"); helicopter)
-			Track(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), FT);
+			TrackWithOffset(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), XMFLOAT3(5.0, 2.0, 0.0), FT);
 		break;
 
 	case CamMode::SPECTOR_MODE:
@@ -312,7 +312,7 @@ void Camera::Track(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec
 }
 
 // 동작은 Track과 동일하나, 시점 Offset을 설정할 수 있다.
-void Camera::TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, XMFLOAT3& Offset, float fTimeElapsed) {
+void Camera::TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, XMFLOAT3& OffsetValue, float fTimeElapsed) {
 	XMFLOAT4X4 RotateMatrix = Mat4::Identity();
 
 	XMFLOAT3 UpVector = UpVec;
@@ -351,14 +351,14 @@ void Camera::TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3
 	XMFLOAT3 LookAtPosition = ObjectPosition;
 
 	// 로컬 좌표계를 기준으로 x축(오른쪽), y축(위쪽), z축(앞쪽)으로 오프셋 적용
-	float OffsetX = Offset.x;  // 오른쪽으로 이동
-	float OffsetY = Offset.y;   // 위쪽으로 이동
-	float OffsetZ = Offset.z;   // 앞뒤로 이동
+	float offsetX = OffsetValue.x;  // 오른쪽으로 이동 (x축)
+	float offsetY = OffsetValue.y;   // 위쪽으로 이동 (y축)
+	float offsetZ = OffsetValue.z;   // z축으로 이동하지 않음
 
 	// 로컬 좌표계를 기준으로 오프셋 적용
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, OffsetX));
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, OffsetY));
-	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, OffsetZ));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, offsetX));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, offsetY));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, offsetZ));
 
 	SetLookAt(LookAtPosition, UpVec);
 }
