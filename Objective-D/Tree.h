@@ -10,7 +10,7 @@ class Tree : public GameObject {
 private:
 	Vector Vec{};
 	XMFLOAT3 Position{};
-	float HeliRotation{};
+	float Rotation{};
 
 public:
 	Tree(float X, float Z) {
@@ -23,7 +23,7 @@ public:
 	}
 
 	void Update(float FT) {
-		HeliRotation = Math::CalcDegree2D(camera.GetPosition().x, camera.GetPosition().z, Position.x, Position.z);
+		Rotation = Math::CalcDegree2D(camera.GetPosition().x, camera.GetPosition().z, Position.x, Position.z);
 	}
 
 	void Render(CommandList CmdList) {
