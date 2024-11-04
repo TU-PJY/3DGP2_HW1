@@ -32,7 +32,7 @@ public:
 	XMFLOAT3 GetPosition() { return Position; }
 
 	Helicopter() {
-		Math::InitVector(Vec.Up, Vec.Right, Vec.Look);
+		Math::InitVector(Vec);
 	}
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
@@ -66,10 +66,8 @@ public:
 			if (camera.Mode == CamMode::TRACK_MODE) {
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
-				mouse.SetPositionToPrev(PrevCursorPos);
-
-				DestRotation.x += cyDelta * 0.5;
-				DestRotation.y += cxDelta * 0.5;
+				mouse.UpdateMotionPosition(PrevCursorPos);
+				UpdateMotionRotation(DestRotation, cxDelta, cyDelta);
 			}
 		}
 	}
@@ -138,31 +136,30 @@ public:
 			Position.z = -95.0;
 
 		// 헬리콥터 부드러운 회전
-		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT);
-		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT);
+		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT * 2);
+		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
 	}
 
 	void Render(CommandList CmdList) {
 		// 헬기 몸통
-		InitMatrix(CmdList, RenderType::Pers);
+		InitMatrix(CmdList, RENDER_TYPE_PERS);
 
 		Transform::Scale(ScaleMatrix, 0.5, 0.5, 0.5);
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
 		Transform::Rotate(TranslateMatrix, Tilt.x, HeliRotation.y, Tilt.z);
 		Transform::Rotate(TranslateMatrix, HeliRotation.x, 0.0, 0.0);
 
-		FlipTexture(CmdList, false, true);
+		FlipTexture(CmdList, FLIP_TYPE_V);
 		BindTexture(CmdList, HelicopterTex);
-		UseShader(CmdList, BasicShader);
-		RenderMesh(CmdList, HelicopterBodyMesh);
+		RenderMesh(CmdList, HelicopterBodyMesh, HelicopterTex, ObjectShader);
 
 		// 헬기 날개
 		// 날개 파츠만의 별도의 변환을 진행한다.
 		Transform::Move(TranslateMatrix, 0.0, 2.0, 0.0);
 		Transform::Rotate(TranslateMatrix, 0.0, WingRotation, 0.0);
-		RenderMesh(CmdList, HelicopterWingMesh);
+		RenderMesh(CmdList, HelicopterWingMesh, HelicopterTex, ObjectShader);
 
 		// 벡터 업데이트
-		Math::UpdateVector(Vec.Up, Vec.Right, Vec.Look, HeliRotation.x, HeliRotation.y, HeliRotation.z);
+		Math::UpdateVector(Vec, HeliRotation.x, HeliRotation.y, HeliRotation.z);
 	}
 };

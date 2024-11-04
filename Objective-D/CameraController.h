@@ -30,7 +30,7 @@ public:
 			case VK_F2:  // 관전 모드로 변경한다.
 				camera.SetCameraMode(CamMode::SPECTOR_MODE);
 				// 마지막으로 기억한 위치로 카메라를 이동시킨다.
-				camera.SetPosition(CamPosition);
+				camera.Move(CamPosition);
 				break;
 
 			case VK_F1:  // 일반 모드로 변경한다.
@@ -60,7 +60,7 @@ public:
 			if (camera.Mode == CamMode::SPECTOR_MODE) {
 				float cxDelta = (float)(mouse.CurrentPosition().x - PrevCursorPos.x) / 5.0f;
 				float cyDelta = (float)(mouse.CurrentPosition().y - PrevCursorPos.y) / 5.0f;
-				mouse.SetPositionToPrev(PrevCursorPos);
+				mouse.UpdateMotionPosition(PrevCursorPos);
 
 				DestCamRotation.x += cyDelta * 0.003;
 				DestCamRotation.y += cxDelta * 0.003;

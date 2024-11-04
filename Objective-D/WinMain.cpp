@@ -2,27 +2,27 @@
 #define MAX_LOADSTRING 100
 #include "Config.h"
 #include "Objective-D.h"
-#include "DirectX_3D_Main.h"
+#include "Framework.h"
 
-#include "FrameworkUtil.h"
+#include "Scene.h"
 #include "CameraUtil.h"
 #include "ShaderUtil.h"
 #include "MouseUtil.h"
 #include "TerrainUtil.h"
 
-int SCREEN_WIDTH = START_UP_WIDTH;
-int SCREEN_HEIGHT = START_UP_HEIGHT;
-int PREV_WIDTH, PREV_HEIGHT;
+int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 
-HWND MainHWND;
-
-DirectX_3D_Main D3D_Main;
+Framework framework;
 
 // 프레임워크, 카메라, 마우스유틸, 터레인 유틸은 전역 객체이다. 즉, 해당되는 헤더파일만 포함하면 어디서든지 사용 가능하다
-Framework framework;
+Scene scene;
 Camera camera;
 MouseUtil mouse;
 TerrainUtil terrainUtil;
+
+// 전체 HWND
+HWND MainHWND;
 
 // 이미지 출력을 위한 패널 매쉬
 Mesh* ImagePannel;
@@ -67,10 +67,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		}
 
 		else
-			D3D_Main.Update();
+			framework.Update();
 	}
 
-	D3D_Main.Destroy();
+	framework.Destroy();
 
 	return((int)Messege.wParam);
 }
@@ -122,14 +122,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	if (!MainHWND)
 		return(FALSE);
 
-	D3D_Main.Create(hInstance, MainHWND);
+	framework.Create(hInstance, MainHWND);
 
 	::ShowWindow(MainHWND, nCmdShow);
 	::UpdateWindow(MainHWND);
 
 	// Config.h에서 전체화면 모드를 활성화 했을 경우 바로 전체화면으로 전환된다
 	if (!START_WITH_FULL_SCREEN)
-		D3D_Main.SwitchToWindowMode(MainHWND);
+		framework.SwitchToWindowMode(MainHWND);
 
 	return(TRUE);
 }
@@ -142,10 +142,10 @@ void DisplayStateChanger(HWND hWnd, UINT nMessageID, WPARAM wParam) {
 	case WM_KEYDOWN:
 		switch (wParam) {
 		case VK_F11:
-			if (D3D_Main.FullScreenState)
-				D3D_Main.SwitchToWindowMode(hWnd);
+			if (framework.FullScreenState)
+				framework.SwitchToWindowMode(hWnd);
 			else
-				D3D_Main.SwitchToFullscreenMode(hWnd);
+				framework.SwitchToFullscreenMode(hWnd);
 			break;
 		}
 		break;
@@ -172,20 +172,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lPara
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
 	case WM_MOUSEWHEEL:
-		framework.InputMouseButton(hWnd, nMessageID, wParam, lParam);
+		scene.InputMouseMessage(hWnd, nMessageID, wParam, lParam);
 		break;
 
 	case WM_KEYDOWN: case WM_KEYUP:
-		framework.InputKey(hWnd, nMessageID, wParam, lParam);
+		scene.InputKeyMessage(hWnd, nMessageID, wParam, lParam);
 		break;
 
 	case WM_MOUSEMOVE:
-		framework.InputMouseMotion(hWnd);
+		scene.InputMouseMotionMessage(hWnd);
 		break;
 
 	case WM_ACTIVATE:
-		D3D_Main.WindowsMessageFunc(hWnd, nMessageID, wParam, lParam);
+		framework.WindowsMessageFunc(hWnd, nMessageID, wParam, lParam);
 		break;
 
 	case WM_COMMAND:
@@ -242,13 +244,13 @@ INT_PTR CALLBACK About(HWND hDlg, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 
 // 뷰포트 배경색을 변경한다. flaot 값 또는 rgb값을 사용할 수 있다.
 void SetBackgroundColorRGB(int R, int G, int B) {
-	D3D_Main.BackgroundColor.x = 1.0 / 255.0 * float(R);
-	D3D_Main.BackgroundColor.y = 1.0 / 255.0 * float(G);
-	D3D_Main.BackgroundColor.z = 1.0 / 255.0 * float(B);
+	framework.BackgroundColor.x = 1.0 / 255.0 * float(R);
+	framework.BackgroundColor.y = 1.0 / 255.0 * float(G);
+	framework.BackgroundColor.z = 1.0 / 255.0 * float(B);
 }
 
 void SetBackgroundColor(float R, float G, float B) {
-	D3D_Main.BackgroundColor.x = float(R);
-	D3D_Main.BackgroundColor.y = float(G);
-	D3D_Main.BackgroundColor.z = float(B);
+	framework.BackgroundColor.x = float(R);
+	framework.BackgroundColor.y = float(G);
+	framework.BackgroundColor.z = float(B);
 }

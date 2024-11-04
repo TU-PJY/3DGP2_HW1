@@ -1,5 +1,5 @@
 #pragma once
-#include "FrameworkUtil.h"
+#include "Scene.h"
 
 namespace HomeMode {
 	void Start();

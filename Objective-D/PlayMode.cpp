@@ -13,10 +13,10 @@
 void PlayMode::Start() {
 	SetBackgroundColor(0.7, 0.7, 0.7);
 	
-	framework.AddObject(new CameraController, "cam_controller", Layer::L1);
-	framework.AddObject(new Terrain, "terrain", Layer::L1);
-	framework.AddObject(new Helicopter, "helicopter", Layer::L1);
-	framework.AddObject(new Crosshair, "crosshair", Layer::L3);
+	scene.AddObject(new CameraController, "cam_controller", LAYER_1);
+	scene.AddObject(new Terrain, "terrain", LAYER_1);
+	scene.AddObject(new Helicopter, "helicopter", LAYER_1);
+	scene.AddObject(new Crosshair, "crosshair", LAYER_3);
 
 	std::random_device rd{};
 	std::uniform_real_distribution<float> DistX(-70.0, 70.0);
@@ -27,16 +27,16 @@ void PlayMode::Start() {
 		float RandX, RandZ;
 		RandX = DistX(rd);
 		RandZ = DistY(rd);
-		framework.AddObject(new Tree(RandX, RandZ), "tree", Layer::L1);
+		scene.AddObject(new Tree(RandX, RandZ), "tree", LAYER_1);
 	}
 
-	mouse.CaptureMotion(MainHWND);
+	mouse.StartMotionCapture(MainHWND);
 
-	framework.RegisterKeyController(KeyboardController);
-	framework.RegisterMouseController(MouseController);
-	framework.RegisterMouseMotionController(MouseMotionController);
-	framework.RegisterDestructor(Destructor);
-	framework.RegisterModeName("PlayMode");
+	scene.RegisterKeyController(KeyboardController);
+	scene.RegisterMouseController(MouseController);
+	scene.RegisterMouseMotionController(MouseMotionController);
+	scene.RegisterDestructor(Destructor);
+	scene.RegisterModeName("PlayMode");
 }
 
 void PlayMode::Destructor() {
@@ -45,28 +45,19 @@ void PlayMode::Destructor() {
 
 void PlayMode::KeyboardController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	if (nMessageID == WM_KEYDOWN && wParam == VK_ESCAPE)
-		framework.Exit();
+		scene.Exit();
 
-	if (auto cam_controller = framework.Find("cam_controller"); cam_controller)
-		cam_controller->InputKey(hWnd, nMessageID, wParam, lParam);
-
-	if (auto helicopter = framework.Find("helicopter"); helicopter)
-		helicopter->InputKey(hWnd, nMessageID, wParam, lParam);
+	scene.InputKey(hWnd, nMessageID, wParam, lParam, "cam_controller");
+	scene.InputKey(hWnd, nMessageID, wParam, lParam, "helicopter");
 }
 
 void PlayMode::MouseMotionController(HWND hWnd) {
 	mouse.UpdateMousePosition(hWnd);
 
-	if (auto cam_controller = framework.Find("cam_controller"); cam_controller)
-		cam_controller->InputMouseMotion(hWnd, mouse.PrevCursorPos);
-
-	if (auto helicopter = framework.Find("helicopter"); helicopter)
-		helicopter->InputMouseMotion(hWnd, mouse.PrevCursorPos);
+	scene.InputMouseMotion(hWnd, "cam_controller");
+	scene.InputMouseMotion(hWnd, "helicopter");
 }
 
 void PlayMode::MouseController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
-	mouse.UpdateButtonState(nMessageID);
-
-	if (auto cam_controller = framework.Find("cam_controller"); cam_controller)
-		cam_controller->InputMouseButton(hWnd, nMessageID, wParam, lParam);
+	scene.InputMouse(hWnd, nMessageID, wParam, lParam, "cam_controller");
 }

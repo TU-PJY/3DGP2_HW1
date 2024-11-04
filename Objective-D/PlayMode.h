@@ -1,6 +1,6 @@
 #pragma once
 #pragma once
-#include "FrameworkUtil.h"
+#include "Scene.h"
 
 namespace PlayMode {
 	void Start();

@@ -83,43 +83,32 @@ VS_OUTPUT VSTexColor(VS_INPUT input)
     return (output);
 }
 
+float3 ComputeLightColor(VS_OUTPUT input, float4 texColor)
+{
+    float3 ambient = gAmbientColor * texColor.rgb;
+    float3 lightDir = normalize(-gLightDirection); // 광원의 방향
+    float3 normal = normalize(input.normalW); // 법선 벡터 정규화
+    float NdotL = max(dot(normal, lightDir), 0.0); // 법선 벡터와 광원 벡터의 내적 (0보다 작으면 0 처리)
+    float3 diffuse = gLightColor * NdotL * texColor.rgb; // 디퓨즈 색상
+    diffuse *= gShadowStrength;
+
+    float3 finalColorWithLight = ambient + diffuse;
+    return finalColorWithLight;
+}
+
 float4 PSTexColor(VS_OUTPUT input) : SV_TARGET
 {
     float4 texColor = gTexture.Sample(gSampler, input.uv);
-    if (texColor.a < 0.01)
-        discard;
-    
     float3 meshColor = gf3ObjectColor;
 
-    // 텍스처 색상 기반으로 주변광 계산
-    float3 ambient = gAmbientColor * texColor.rgb;
-    
-    // 광원 방향 정규화
-    float3 lightDir = normalize(-gLightDirection);
-    
-    // 법선 벡터 정규화
-    float3 normal = normalize(input.normalW);
-    
-    // 법선 벡터와 광원 벡터의 내적 (0보다 작으면 0 처리)
-    float NdotL = max(dot(normal, lightDir), 0.0);
-    
-    // 밝기 차이를 강화하기 위해 NdotL에 거듭제곱 적용
-    NdotL = pow(NdotL, 2.0); // 제곱을 통해 밝은 곳은 더 밝게, 어두운 곳은 더 어둡게
-
-    // 텍스처 색상의 밝기를 높이는 방식의 조명
-    float3 diffuse = NdotL * texColor.rgb;
-    diffuse *= 2.0;
-
-    // 최종 색상 계산: 텍스처 색상의 밝기 조정
-    float3 finalColorWithLight = ambient + diffuse;
-    float3 finalColorWithoutLight = texColor.rgb;
-    
     // UseLight가 0이면 조명 사용 안 함, 1이면 조명 사용함
-    float3 finalColor = lerp(finalColorWithoutLight, finalColorWithLight, UseLight);
+    float3 finalColor = lerp(texColor.rgb, ComputeLightColor(input, texColor), UseLight);
     
     finalColor += meshColor;
+    
+    if(texColor.a < 0.01)
+        discard;
   
-    // 알파 값과 함께 최종 출력 색상
     float4 outputColor = float4(finalColor, texColor.a * AlphaValue);
     return outputColor;
 }

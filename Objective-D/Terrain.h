@@ -1,7 +1,6 @@
 #pragma once
 #include "GameObject.h"
 #include "CameraUtil.h"
-#include "ResourceManager.h"
 #include "TransformUtil.h"
 #include "TerrainUtil.h"
 
@@ -17,17 +16,13 @@ public:
 
 	void Render(CommandList CmdList) {
 		// 터레인은 정적 오브젝트이므로 행렬 초기화 및 변환을 실행하지 않는다.
-		renderType = RenderType::Pers;
+		RenderType = RENDER_TYPE_PERS;
 		EnableLight(CmdList);
-		AlphaValue = 1.0f;
-		FlipTexture(CmdList, false, false);
+		ObjectAlpha = 1.0f;
+		FlipTexture(CmdList, FLIP_TYPE_NONE);
 		camera.SetToDefaultMode();
 		SetColor(0.0, 0.0, 0.0);
 
-		BindTexture(CmdList, TerrainTex);
-		UseShader(CmdList, BasicShader);
-		RenderMesh(CmdList, TerrainMesh);
-
-		terrainUtil.InputData(TranslateMatrix, RotateMatrix, ScaleMatrix, TerrainMesh);
+		RenderMesh(CmdList, TerrainMesh, TerrainTex, ObjectShader);
 	}
 };

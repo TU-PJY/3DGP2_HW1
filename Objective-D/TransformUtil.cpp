@@ -23,11 +23,6 @@ void Transform::Rotate(XMFLOAT4X4& Matrix, float RotationX, float RotationY, flo
 	Matrix = Mat4::Multiply(RotateMat, Matrix);
 }
 
-void Transform::RotateRad(XMFLOAT4X4& Matrix, float RotationX, float RotationY, float RotationZ) {
-	XMMATRIX RotateMat = XMMatrixRotationRollPitchYaw(RotationX, RotationY, RotationZ);
-	Matrix = Mat4::Multiply(RotateMat, Matrix);
-}
-
 // Y축 회전 후 X축 회전 변환
 void Transform::RotateYX(XMFLOAT4X4& Matrix, float RotationX, float RotationY) {
 	XMMATRIX rotationY = XMMatrixRotationY(XMConvertToRadians(-RotationY));

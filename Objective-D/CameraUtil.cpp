@@ -1,14 +1,15 @@
 #include "CameraUtil.h"
-#include "FrameworkUtil.h"
 #include "RootConstants.h"
 #include "RootConstantUtil.h"
+#include "Scene.h"
 
 // Config.h 에서 작성한 모드에 따라 카메라가 다르게 동작하도록 작성할 수 있다.
+// 예) 카메라 추적 대상 변경, 카메라 시점 변경 등
 void Camera::Update(float FT) {
 	switch (Mode) {
 		// 추적 모드애서는 헬리콥터 객체를 추적한다.
 	case CamMode::TRACK_MODE:
-		if (auto helicopter = framework.Find("helicopter"); helicopter)
+		if (auto helicopter = scene.Find("helicopter"); helicopter)
 			Track(helicopter->GetPosition(), helicopter->GetUp(), helicopter->GetRight(), helicopter->GetLook(), FT);
 		break;
 
@@ -118,14 +119,14 @@ void Camera::InitStaticMatrix() {
 
 	// 직각투영이 디폴트이다.
 	StaticProjectionMatrix = Mat4::Identity();
-	XMMATRIX Projection = XMMatrixOrthographicLH(2.0 * ASPECT_RATIO, 2.0, 0.0, 10.0);
+	XMMATRIX Projection = XMMatrixOrthographicLH(2.0 * ASPECT, 2.0, 0.0, 10.0);
 	XMStoreFloat4x4(&StaticProjectionMatrix, Projection);
 }
 
 // 윈도우 사이즈 변경 시 실행된다.
 void Camera::UpdateStaticMatrix() {
 	StaticProjectionMatrix = Mat4::Identity();
-	XMMATRIX Projection = XMMatrixOrthographicLH(2.0 * ASPECT_RATIO, 2.0, 0.0, 10.0);
+	XMMATRIX Projection = XMMatrixOrthographicLH(2.0 * ASPECT, 2.0, 0.0, 10.0);
 	XMStoreFloat4x4(&StaticProjectionMatrix, Projection);
 }
 
@@ -168,8 +169,33 @@ void Camera::SetCameraMode(CamMode ModeValue) {
 	Mode = ModeValue;
 }
 
+// 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
+void Camera::Move(XMFLOAT3 PositionValue) { Position = PositionValue; }
+XMFLOAT3& Camera::GetPosition() { return(Position); }
+void Camera::SetLookAtPosition(XMFLOAT3 LookAtValue) { LookAt = LookAtValue; }
+XMFLOAT3& Camera::GetLookAtPosition() { return(LookAt); }
+
+XMFLOAT3& Camera::GetRightVector() { return(Right); }
+XMFLOAT3& Camera::GetUpVector() { return(Up); }
+XMFLOAT3& Camera::GetLookVector() { return(Look); }
+
+float& Camera::GetPitch() { return(Pitch); }
+float& Camera::GetRoll() { return(Roll); }
+float& Camera::GetYaw() { return(Yaw); }
+
+void Camera::SetOffset(XMFLOAT3 Value) { Offset = Value; }
+XMFLOAT3& Camera::GetOffset() { return(Offset); }
+
+void Camera::SetTimeLag(float DelayValue) { MovingDelay = DelayValue; }
+float Camera::GetTimeLag() { return(MovingDelay); }
+
+XMFLOAT4X4 Camera::GetViewMatrix() { return(ViewMatrix); }
+XMFLOAT4X4 Camera::GetProjectionMatrix() { return(ProjectionMatrix); }
+D3D12_VIEWPORT Camera::GetViewport() { return(Viewport); }
+D3D12_RECT Camera::GetScissorRect() { return(ScissorRect); }
+
 // 카메라의 위치를 변경한다.
-void Camera::SetPosition(float X, float Y, float Z) {
+void Camera::Move(float X, float Y, float Z) {
 	Position.x = X;
 	Position.y = Y;
 	Position.z = Z;
@@ -184,7 +210,7 @@ void Camera::MoveForward(float MoveDistance) {
 	Position.z += NormlaizedLook.z * MoveDistance;
 }
 
-//// 현재 시점에서 높이 변화 없이 앞으로 움직인다.
+// 현재 시점에서 높이 변화 없이 앞으로 움직인다.
 void Camera::MoveForwardWithoutHeight(float MoveDistance) {
 	Position.x += sin(Yaw) * MoveDistance;
 	Position.z += cos(Yaw) * MoveDistance;
@@ -276,6 +302,58 @@ void Camera::Track(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec
 	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, offsetX));
 	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, offsetY));
 	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, offsetZ));
+
+	SetLookAt(LookAtPosition, UpVec);
+}
+
+// 동작은 Track과 동일하나, 시점 Offset을 설정할 수 있다.
+void Camera::TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, XMFLOAT3& Offset, float fTimeElapsed) {
+	XMFLOAT4X4 RotateMatrix = Mat4::Identity();
+
+	XMFLOAT3 UpVector = UpVec;
+	XMFLOAT3 RightVector = RightVec;
+	XMFLOAT3 LookVector = LookVec;
+
+	RotateMatrix._21 = UpVector.x;
+	RotateMatrix._22 = UpVector.y;
+	RotateMatrix._23 = UpVector.z;
+
+	RotateMatrix._11 = RightVector.x;
+	RotateMatrix._12 = RightVector.y;
+	RotateMatrix._13 = RightVector.z;
+
+	RotateMatrix._31 = LookVector.x;
+	RotateMatrix._32 = LookVector.y;
+	RotateMatrix._33 = LookVector.z;
+
+	XMFLOAT3 Direction = Vec3::Subtract(Vec3::Add(ObjectPosition, Vec3::TransformCoord(Offset, RotateMatrix)), Position);
+
+	float Length = Vec3::Length(Direction);
+	Direction = Vec3::Normalize(Direction);
+
+	float TimeLagScale = (MovingDelay) ? fTimeElapsed * (1.0f / MovingDelay) : 1.0f;
+	float MoveDistance = Length * TimeLagScale;
+
+	if (MoveDistance > Length)
+		MoveDistance = Length;
+
+	if (Length < 0.01f)
+		MoveDistance = Length;
+
+	Position = Vec3::Add(Position, Direction, MoveDistance);
+
+	// 로컬 좌표계에서 LookAtPosition 조정
+	XMFLOAT3 LookAtPosition = ObjectPosition;
+
+	// 로컬 좌표계를 기준으로 x축(오른쪽), y축(위쪽), z축(앞쪽)으로 오프셋 적용
+	float OffsetX = Offset.x;  // 오른쪽으로 이동
+	float OffsetY = Offset.y;   // 위쪽으로 이동
+	float OffsetZ = Offset.z;   // 앞뒤로 이동
+
+	// 로컬 좌표계를 기준으로 오프셋 적용
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(RightVec, OffsetX));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(UpVec, OffsetY));
+	LookAtPosition = Vec3::Add(LookAtPosition, Vec3::Scale(LookVec, OffsetZ));
 
 	SetLookAt(LookAtPosition, UpVec);
 }
@@ -387,28 +465,3 @@ bool Camera::IsInFrustum(BoundingOrientedBox& BoundingBox) {
 #else
 #endif
 }
-
-// 위치 이동, 시점 추적 위치 설정 등 회전각도, 위치, 벡터 관련 함수들이다.
-void Camera::SetPosition(XMFLOAT3 PositionValue) { Position = PositionValue; }
-XMFLOAT3& Camera::GetPosition() { return(Position); }
-void Camera::SetLookAtPosition(XMFLOAT3 LookAtValue) { LookAt = LookAtValue; }
-XMFLOAT3& Camera::GetLookAtPosition() { return(LookAt); }
-
-XMFLOAT3& Camera::GetRightVector() { return(Right); }
-XMFLOAT3& Camera::GetUpVector() { return(Up); }
-XMFLOAT3& Camera::GetLookVector() { return(Look); }
-
-float& Camera::GetPitch() { return(Pitch); }
-float& Camera::GetRoll() { return(Roll); }
-float& Camera::GetYaw() { return(Yaw); }
-
-void Camera::SetOffset(XMFLOAT3 Value) { Offset = Value; }
-XMFLOAT3& Camera::GetOffset() { return(Offset); }
-
-void Camera::SetTimeLag(float DelayValue) { MovingDelay = DelayValue; }
-float Camera::GetTimeLag() { return(MovingDelay); }
-
-XMFLOAT4X4 Camera::GetViewMatrix() { return(ViewMatrix); }
-XMFLOAT4X4 Camera::GetProjectionMatrix() { return(ProjectionMatrix); }
-D3D12_VIEWPORT Camera::GetViewport() { return(Viewport); }
-D3D12_RECT Camera::GetScissorRect() { return(ScissorRect); }

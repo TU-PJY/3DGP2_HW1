@@ -4,7 +4,7 @@
 #include "TextureUtil.h"
 
 ////////////////////////////////// 기본 리소스
-extern BasicObjectShader* BasicShader;
+extern BasicObjectShader* ObjectShader;
 extern BasicObjectShader* BoundboxShader;
 
 // 선 출력용 텍스처
@@ -18,10 +18,14 @@ extern Mesh* SkyboxMesh;
 
 // 바운드박스 출력용 매쉬
 extern Mesh* BoundMesh;
+
+// 바운드 스페어 출력용 매쉬
+extern Mesh* BoundingSphereMesh;
 //////////////////////////////////
 
+// 커스텀 매쉬 및 텍스처
 // Home Mode
-extern Texture* HelpTex; // 도움말 표시 이미지
+extern Texture* HelpTex; // 도움말 이미지
 extern Texture* ArrowTex; // 스크롤 안내 이미지
 extern Texture* ScrollHelpTex;
 extern Texture* EnterTex; // 시작 안내 텍스트

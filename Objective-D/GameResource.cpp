@@ -1,14 +1,18 @@
-#include "ResourceManager.h"
+#include "GameResource.h"
+#include "ResourceFileLink.h"
 
 // 이 파일은 리소스를 관리한다.
 // 기본적으로 전역 리소스이며, ResourceManager.h에 먼저 extern 선언한 뒤, 이 파일에 아래와 같이 정의하면 된다.
-// Framework::Init()에서 실행된다.
+// Scene::Init()에서 실행된다.
+
+// ResourceFileLink.h에 작성한 파일 경로를 사용할 수 있다.
 
 ////////////////////////////////
-BasicObjectShader* BasicShader;
+BasicObjectShader* ObjectShader;
 BasicObjectShader* BoundboxShader;
 Texture* LineTex;
 Mesh* BoundMesh;
+Mesh* BoundingSphereMesh;
 ////////////////////////////////
 
 // Home Mode
@@ -25,15 +29,16 @@ Mesh* HelicopterBodyMesh; // 헬리콥터 몸체 부분
 Mesh* HelicopterWingMesh; // 헬리콥터 날개 부분
 Texture* HelicopterTex; // 헬리콥터 텍스처
 
+
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
 	// 파이프라인 생성이 곧 쉐이더 설정의 마무리이다.
 	// 일반 렌더링 쉐이더 생성
-	BasicShader = new BasicObjectShader();
-	BasicShader->CreateDefaultPipeline(Device, RootSignature);
+	ObjectShader = new BasicObjectShader();
+	ObjectShader->CreateDefaultPipeline(Device, RootSignature);
 
 	// 깊이 검사 미포함 파이프라인 생성
-	BasicShader->CreateImageDepthPipelineState(Device, RootSignature);
+	ObjectShader->CreateImageDepthPipelineState(Device, RootSignature);
 
 	// 바운드박스 쉐이더 생성
 	BoundboxShader = new BasicObjectShader();
@@ -54,28 +59,31 @@ void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList
 	// 바운드박스 출력용 매쉬 생성
 	BoundMesh = new Mesh;
 	BoundMesh->CreateBoundboxMesh(Device, CmdList);
+
+	// 바운드스페어 출력용 매쉬 생성
+	BoundingSphereMesh = new Mesh(Device, CmdList, BOUNDING_SPHERE_MESH_DIRECTORY, MESH_TYPE_TEXT);
 	////////////////////////////////
 
 	// Play Mode
-	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.bin", MeshType::Binary);
-	HelicopterBodyMesh = new Mesh(Device, CmdList, "Resources//Models//Gunship.bin", MeshType::Binary);
-	HelicopterWingMesh = new Mesh(Device, CmdList, "Resources//Models//Rotor.bin", MeshType::Binary);
+	TerrainMesh = new Mesh(Device, CmdList, "Resources//Models//terrain.bin", MESH_TYPE_BIN);
+	HelicopterBodyMesh = new Mesh(Device, CmdList, "Resources//Models//Gunship.bin", MESH_TYPE_BIN);
+	HelicopterWingMesh = new Mesh(Device, CmdList, "Resources//Models//Rotor.bin", MESH_TYPE_BIN);
 }
 
 void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
 	// 선 그리기용 텍스처 생성
-	LineTex = new Texture(Device, CmdList, L"Resources//Image//line_tex.png");
+	LineTex = new Texture(Device, CmdList, LINE_TEXTURE_DIRECTORY, TEXTURE_TYPE_WIC);
 	////////////////////////////////
 
 	// Home Mode
-	HelpTex = new Texture(Device, CmdList, L"Resources//Image//help.png");
-	ArrowTex = new Texture(Device, CmdList, L"Resources//Image//arrow.png");
-	ScrollHelpTex = new Texture(Device, CmdList, L"Resources//Image//scroll_help.png");
-	EnterTex = new Texture(Device, CmdList, L"Resources//Image//press_enter.png");
+	HelpTex = new Texture(Device, CmdList, L"Resources//Image//help.png", TEXTURE_TYPE_WIC);
+	ArrowTex = new Texture(Device, CmdList, L"Resources//Image//arrow.png", TEXTURE_TYPE_WIC);
+	ScrollHelpTex = new Texture(Device, CmdList, L"Resources//Image//scroll_help.png", TEXTURE_TYPE_WIC);
+	EnterTex = new Texture(Device, CmdList, L"Resources//Image//press_enter.png", TEXTURE_TYPE_WIC);
 
 	// play mode
-	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg");
-	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png");
-	HelicopterTex = new Texture(Device, CmdList, L"Resources//Image//GunShip.png");
+	TerrainTex = new Texture(Device, CmdList, L"Resources//Image//grass.jpg", TEXTURE_TYPE_WIC);
+	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png", TEXTURE_TYPE_WIC);
+	HelicopterTex = new Texture(Device, CmdList, L"Resources//Image//GunShip.png", TEXTURE_TYPE_WIC);
 }

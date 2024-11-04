@@ -1,7 +1,6 @@
 #pragma once
 #include "Config.h"
 #include "DirectX_3D.h"
-#include "GameObject.h"
 
 class Camera {
 protected:
@@ -35,12 +34,10 @@ private:
 	bool StaticMode{};
 
 public:
+	CamMode Mode{};
 	D3D12_VIEWPORT					Viewport{};
 	XMFLOAT4X4						ViewMatrix{};
 	XMFLOAT4X4						ProjectionMatrix{};
-
-	// 카메라 모드
-	CamMode Mode{};
 
 	// 정적 출력을 위한 스테틱 행렬 (예: UI, 이미지 등
 	XMFLOAT4X4 StaticViewMatrix{};
@@ -55,8 +52,6 @@ public:
 	void SetToDefaultMode();
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* CmdList);
 
-
-
 	void GenerateViewMatrix();
 	void GenerateViewMatrix(XMFLOAT3 PositionValue, XMFLOAT3 LookAt, XMFLOAT3 UpValue);
 	void SetToStaticMode();
@@ -70,7 +65,7 @@ public:
 	virtual void SetViewportsAndScissorRects(ID3D12GraphicsCommandList* CmdList);
 	void SetCameraMode(CamMode GetMode);
 
-	void SetPosition(XMFLOAT3 PositionValue);
+	void Move(XMFLOAT3 PositionValue);
 	XMFLOAT3& GetPosition();
 
 	void Rotate(float X, float Y, float Z);
@@ -97,13 +92,14 @@ public:
 	D3D12_VIEWPORT GetViewport();
 	D3D12_RECT GetScissorRect();
 
-	void SetPosition(float X, float Y, float Z);
+	void Move(float X, float Y, float Z);
 	void MoveForward(float MoveDistance);
 	void MoveForwardWithoutHeight(float MoveDistance);
 	void MoveStrafe(float MoveDistance);
 	void MoveStrafeWithoutHeight(float MoveDistance);
 	void MoveVertical(float MoveDistance);
 	void Track(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, float fTimeElapsed);
+	void TrackWithOffset(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec, XMFLOAT3& RightVec, XMFLOAT3& LookVec, XMFLOAT3& Offset, float fTimeElapsed);
 	void SetLookAt(XMFLOAT3& ObjectPosition, XMFLOAT3& UpVec);
 	void CalculateFrustumPlanes();
 	bool IsInFrustum(BoundingBox& BoundingBox);

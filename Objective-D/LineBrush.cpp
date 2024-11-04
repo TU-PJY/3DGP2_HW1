@@ -2,8 +2,7 @@
 #include "TextureUtil.h"
 #include "ShaderUtil.h"
 #include "MeshUtil.h"
-#include "ResourceManager.h"
-#include "CBVManager.h"
+#include "GameResource.h"
 #include "CBVUtil.h"
 #include "TransformUtil.h"
 #include "CameraUtil.h"
@@ -26,7 +25,7 @@ void LineBrush::Init(ID3D12GraphicsCommandList* CmdList) {
 
 	camera.SetToStaticMode();
 	camera.InitMatrix();
-	camera.GenerateOrthoMatrix(1.0, 1.0, ASPECT_RATIO, 0.0, 10.0);
+	camera.GenerateOrthoMatrix(1.0, 1.0, ASPECT, 0.0, 10.0);
 	camera.SetViewportsAndScissorRects(CmdList);
 	camera.UpdateShaderVariables(CmdList);
 }
@@ -38,15 +37,15 @@ void LineBrush::Draw(ID3D12GraphicsCommandList* CmdList, float X1, float Y1, flo
 	TransparencyValue = Alpha;
 
 	Length = Math::CalcDistance2D(X1, Y1, X2, Y2);
-	HeliRotation = Math::CalcDegree2D(X1, Y1, X2, Y2);
+	Rotation = Math::CalcDegree2D(X1, Y1, X2, Y2);
 
 	Transform::Move(TranslateMatrix, X1, Y1, 0.0);
-	Transform::Rotate(TranslateMatrix, HeliRotation, 0.0, 0.0, 1.0);
+	Transform::Rotate(TranslateMatrix, Rotation, 0.0, 0.0, 1.0);
 	Transform::Move(TranslateMatrix, Length / 2.0, 0.0, 0.0);
 	Transform::Scale(ScaleMatrix, Width + Length, Width, 1.0);
 
 	LineTex->Render(CmdList);
-	BasicShader->Render(CmdList, false);
+	ObjectShader->Render(CmdList, false);
 
 	XMMATRIX ResultMatrix = XMMatrixMultiply(XMLoadFloat4x4(&ScaleMatrix), XMLoadFloat4x4(&TranslateMatrix));
 	XMFLOAT4X4 xmf4x4World;

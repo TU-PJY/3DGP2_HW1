@@ -12,16 +12,15 @@ enum class State
 class MouseUtil {
 public:
 	float x{}, y{};
-	POINT PrevCursorPos{};
+	POINT MotionPosition{};
 	POINT ClientPosition{};
 	bool LBUTTONDOWN{}, RBUTTONDOWN{};
 
 	void HideCursor();
-	void CaptureMotion(HWND hWnd);
-	void ReleaseMotion();
-	void SetPositionToPrev(POINT PrevPosition);
+	void StartMotionCapture(HWND hWnd);
+	void EndMotionCapture();
+	void UpdateMotionPosition(POINT PrevPosition);
 	POINT CurrentPosition();
 	void UpdateMousePosition(HWND hWnd);
-	void UpdateButtonState(UINT nMessageID);
 };
 extern MouseUtil mouse;

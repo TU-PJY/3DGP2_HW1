@@ -23,7 +23,9 @@
 
 #include "d3dx12.h"
 #include "WICTextureLoader12.h"
-#include "CBVManager.h"
+#include "DDSTextureLoader12.h"
+#include "CBVResource.h"
+#include "ResourceFileLink.h"
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -36,17 +38,45 @@
 
 #include <iostream>
 
-enum class RenderType
-{ Pers, Ortho };
+// 렌더링 타입 열거형
+enum RenderTypeEnum {
+	RENDER_TYPE_PERS, 
+	RENDER_TYPE_ORTHO, 
+	RENDER_TYPE_IMAGE 
+};
 
-extern int SCREEN_WIDTH, SCREEN_HEIGHT;
-extern int PREV_WIDTH, PREV_HEIGHT;
+// 텍스처 반전 타입 열거형
+enum FlipTypeEnum {
+	FLIP_TYPE_NONE,
+	FLIP_TYPE_H,
+	FLIP_TYPE_V,
+	FLIP_TYPE_HV,
+};
 
-// 전역 hwnd
+// 매쉬 파일 타입 열거형
+enum MeshTypeEnum {
+	MESH_TYPE_TEXT,
+	MESH_TYPE_BIN
+};
+
+// 텍스처 파일 타입 열거형
+enum TextureTypeEnum {
+	TEXTURE_TYPE_WIC,
+	TEXTURE_TYPE_DDS
+};
+
+// 오브젝트 벡터 구조체
+typedef struct Vector {
+	DirectX::XMFLOAT3 Look;
+	DirectX::XMFLOAT3 Right;
+	DirectX::XMFLOAT3 Up;
+}ObjectVector;
+
 extern HWND MainHWND;
 
 // screen size
-#define ASPECT_RATIO (float(SCREEN_WIDTH) / float(SCREEN_HEIGHT))
+extern int SCREEN_WIDTH, SCREEN_HEIGHT;
+#define ASPECT (float(SCREEN_WIDTH) / float(SCREEN_HEIGHT))
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -74,10 +104,6 @@ namespace Vec3 {
 		return(xmf3Result);
 	}
 
-	inline XMFLOAT3 Scale(const XMFLOAT3& vector, float scalar) {
-		return XMFLOAT3(vector.x * scalar, vector.y * scalar, vector.z * scalar);
-	}
-
 	inline XMFLOAT3 Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2) {
 		XMFLOAT3 xmf3Result;
 		XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + XMLoadFloat3(&xmf3Vector2));
@@ -88,6 +114,10 @@ namespace Vec3 {
 		XMFLOAT3 xmf3Result;
 		XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + (XMLoadFloat3(&xmf3Vector2) * fScalar));
 		return(xmf3Result);
+	}
+
+	inline XMFLOAT3 Scale(const XMFLOAT3& vector, float scalar) {
+		return XMFLOAT3(vector.x * scalar, vector.y * scalar, vector.z * scalar);
 	}
 
 	inline XMFLOAT3 Subtract(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2) {
@@ -203,12 +233,6 @@ namespace Mat4 {
 	inline XMFLOAT4X4 LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition, XMFLOAT3& xmf3UpDirection) {
 		XMFLOAT4X4 xmmtx4x4Result;
 		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));
-		return(xmmtx4x4Result);
-	}
-
-	inline XMFLOAT4X4 LookToLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookTo, XMFLOAT3& xmf3UpDirection) {
-		XMFLOAT4X4 xmmtx4x4Result;
-		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookToLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookTo), XMLoadFloat3(&xmf3UpDirection)));
 		return(xmmtx4x4Result);
 	}
 }
