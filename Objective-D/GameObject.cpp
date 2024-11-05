@@ -155,13 +155,12 @@ int GameObject::PickRayInter(Mesh* MeshPtr, XMVECTOR& xmvPickPosition, XMMATRIX&
 
 // 행렬과 쉐이더 및 색상 관련 값들을 쉐이더에 전달한다. RenderMesh함수를 실행하면 이 함수도 실행된다. 즉, 직접 사용할 일이 없다.
 void GameObject::UpdateShaderVariables(ID3D12GraphicsCommandList* CmdList) {
-	XMMATRIX ResultMatrix = XMMatrixMultiply(XMLoadFloat4x4(&ScaleMatrix), XMLoadFloat4x4(&RotateMatrix));
-	ResultMatrix = XMMatrixMultiply(ResultMatrix, XMLoadFloat4x4(&TranslateMatrix));
+	XMMATRIX XMResultMatrix = XMMatrixMultiply(XMLoadFloat4x4(&ScaleMatrix), XMLoadFloat4x4(&RotateMatrix));
+	XMResultMatrix = XMMatrixMultiply(XMResultMatrix, XMLoadFloat4x4(&TranslateMatrix));
 
-	XMFLOAT4X4 xmf4x4World;
-	XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(ResultMatrix));
+	XMStoreFloat4x4(&ResultMatrix, XMMatrixTranspose(XMResultMatrix));
 
-	RCUtil::Input(CmdList, &xmf4x4World, GAME_OBJECT_INDEX, 16, 0);
+	RCUtil::Input(CmdList, &ResultMatrix, GAME_OBJECT_INDEX, 16, 0);
 	RCUtil::Input(CmdList, &ModelColor, GAME_OBJECT_INDEX, 3, 16);
 	RCUtil::Input(CmdList, &ObjectAlpha, ALPHA_INDEX, 1, 0);
 }

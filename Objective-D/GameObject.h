@@ -15,6 +15,7 @@ public:
 	XMFLOAT4X4 TranslateMatrix = Mat4::Identity();
 	XMFLOAT4X4 RotateMatrix = Mat4::Identity();
 	XMFLOAT4X4 ScaleMatrix = Mat4::Identity();
+	XMFLOAT4X4 ResultMatrix = Mat4::Identity();
 
 	// 매쉬 색상
 	XMFLOAT3 ModelColor{};
@@ -73,4 +74,5 @@ public:
 	virtual XMFLOAT3 GetLook() { return {}; }
 
 	virtual void SetUnable() {}
+	virtual XMFLOAT4X4 GetMatrix() { return {}; }
 };

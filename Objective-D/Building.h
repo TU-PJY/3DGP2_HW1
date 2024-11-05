@@ -11,6 +11,10 @@ public:
 		return aabb;
 	}
 
+	XMFLOAT4X4 GetMatrix() {
+		return ResultMatrix;
+	}
+
 	Building() {
 		Transform::Scale(ScaleMatrix, 0.04, 0.04, 0.04);
 		Transform::Rotate(RotateMatrix, -90.0, 0.0, 0.0);
