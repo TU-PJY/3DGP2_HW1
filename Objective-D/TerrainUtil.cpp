@@ -23,6 +23,7 @@ void TerrainUtil::ClampToFloor(XMFLOAT3& Position, float Offset) {
 		Position.y = TerrainMesh->GetHeightAtPosition(TerrainMesh, Position.x, Position.z, TerrainMatrix) + Offset;
 }
 
+// 특정 오브젝트의 위치가 터레인 바닥에 도달할 경우 터레인 바닥의 높이로 오브젝트를 이동시킨다
 float TerrainUtil::GetFloorHeight(float x, float z, float Offset) {
 	if (TerrainMesh)
 		return TerrainMesh->GetHeightAtPosition(TerrainMesh, x, z, TerrainMatrix) + Offset;
@@ -30,13 +31,14 @@ float TerrainUtil::GetFloorHeight(float x, float z, float Offset) {
 }
 
 // 특정 오브젝트의 위치가 터레인 바닥에 도달할 경우 터레인 바닥의 높이로 오브젝트를 이동시킨다
-void TerrainUtil::CheckCollision(XMFLOAT3& Position) {
+void TerrainUtil::CheckCollision(XMFLOAT3& Position, float Offset) {
 	if (TerrainMesh) {
-		if (Position.y < TerrainMesh->GetHeightAtPosition(TerrainMesh, Position.x, Position.z, TerrainMatrix))
-			Position.y = TerrainMesh->GetHeightAtPosition(TerrainMesh, Position.x, Position.z, TerrainMatrix);
+		if (Position.y + Offset < TerrainMesh->GetHeightAtPosition(TerrainMesh, Position.x, Position.z, TerrainMatrix))
+			Position.y = TerrainMesh->GetHeightAtPosition(TerrainMesh, Position.x, Position.z, TerrainMatrix) - Offset;
 	}
 }
 
+// 터레인 매쉬와 변환 정보를 입력한다
 void TerrainUtil::InputData(XMFLOAT4X4& TMat, XMFLOAT4X4& RMat, XMFLOAT4X4& SMat, Mesh* MeshData) {
 	XMMATRIX ResultMatrix = XMMatrixMultiply(XMLoadFloat4x4(&SMat), XMLoadFloat4x4(&RMat));
 	ResultMatrix = XMMatrixMultiply(ResultMatrix, XMLoadFloat4x4(&TMat));

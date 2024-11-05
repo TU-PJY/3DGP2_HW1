@@ -91,34 +91,35 @@ int Mesh::CheckRayIntersection(XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayD
 }
 
 float Mesh::GetHeightAtPosition(Mesh* terrainMesh, float x, float z, const XMFLOAT4X4& worldMatrix) {
-	// XMFLOAT4X4를 XMMATRIX로 변환
-	XMMATRIX gmtxWorld = XMLoadFloat4x4(&worldMatrix);
+    static bool transformed = false;
+    static std::vector<XMFLOAT3> worldVertices;
 
-	// 월드 좌표로 변환된 삼각형의 각 점 좌표를 계산
-	for (UINT i = 0; i < terrainMesh->Indices; i += 3) {
-		XMFLOAT3 v0 = terrainMesh->Position[terrainMesh->PnIndices[i]];
-		XMFLOAT3 v1 = terrainMesh->Position[terrainMesh->PnIndices[i + 1]];
-		XMFLOAT3 v2 = terrainMesh->Position[terrainMesh->PnIndices[i + 2]];
+    if (!transformed) {
+        // 월드 좌표 변환은 최초 1회만 수행하여 캐시합니다.
+        XMMATRIX gmtxWorld = XMLoadFloat4x4(&worldMatrix);
+        for (UINT i = 0; i < terrainMesh->Indices; i++) {
+            XMFLOAT3 v = terrainMesh->Position[terrainMesh->PnIndices[i]];
+            XMVECTOR vWorld = XMVector3Transform(XMLoadFloat3(&v), gmtxWorld);
+            XMFLOAT3 worldVertex;
+            XMStoreFloat3(&worldVertex, vWorld);
+            worldVertices.push_back(worldVertex);
+        }
+        transformed = true;
+    }
 
-		// 로컬 좌표를 월드 좌표로 변환
-		XMVECTOR v0World = XMVector3Transform(XMLoadFloat3(&v0), gmtxWorld);
-		XMVECTOR v1World = XMVector3Transform(XMLoadFloat3(&v1), gmtxWorld);
-		XMVECTOR v2World = XMVector3Transform(XMLoadFloat3(&v2), gmtxWorld);
+    // 캐싱된 월드 좌표를 이용해 높이 계산
+    for (UINT i = 0; i < worldVertices.size(); i += 3) {
+        XMFLOAT3 v0 = worldVertices[i];
+        XMFLOAT3 v1 = worldVertices[i + 1];
+        XMFLOAT3 v2 = worldVertices[i + 2];
 
-		// 월드 좌표로 변환된 점을 다시 저장
-		XMStoreFloat3(&v0, v0World);
-		XMStoreFloat3(&v1, v1World);
-		XMStoreFloat3(&v2, v2World);
+        // 삼각형 내부 확인
+        if (IsPointInTriangle(XMFLOAT2(x, z), XMFLOAT2(v0.x, v0.z), XMFLOAT2(v1.x, v1.z), XMFLOAT2(v2.x, v2.z))) {
+            return ComputeHeightOnTriangle(XMFLOAT3(x, 0, z), v0, v1, v2);
+        }
+    }
 
-		// 삼각형 내부인지 확인
-		if (IsPointInTriangle(XMFLOAT2(x, z), XMFLOAT2(v0.x, v0.z), XMFLOAT2(v1.x, v1.z), XMFLOAT2(v2.x, v2.z))) {
-			// 삼각형 평면에서 Y 값을 계산
-			float height = ComputeHeightOnTriangle(XMFLOAT3(x, 0, z), v0, v1, v2);
-			return height;
-		}
-	}
-	// 삼각형을 찾지 못한 경우 기본 값 반환 (예: 0)
-	return 0.0f;
+    return 0.0f;
 }
 
 bool Mesh::IsPointInTriangle(XMFLOAT2 pt, XMFLOAT2 v0, XMFLOAT2 v1, XMFLOAT2 v2) {

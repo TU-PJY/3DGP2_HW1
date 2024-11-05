@@ -6,12 +6,22 @@
 
 
 class Terrain : public GameObject {
+private:
+	OOBB oobb;
+
 public:
+	OOBB GetOOBB() {
+		return oobb;
+	}
+
 	Terrain() {
 		// 터레인 정보를 터레인 충돌처리 유틸에 전달한다.
 		Transform::Move(TranslateMatrix, 0.0, -5.0, 0.0);
 		Transform::Scale(ScaleMatrix, 20.0, 30.0, 40.0);
 		terrainUtil.InputData(TranslateMatrix, RotateMatrix, ScaleMatrix, TerrainMesh);
+
+		// oobb 업데이트
+		oobb.Update(TerrainMesh, TranslateMatrix, RotateMatrix, ScaleMatrix);
 	}
 
 	void Render(CommandList CmdList) {
@@ -24,5 +34,6 @@ public:
 		SetColor(0.0, 0.0, 0.0);
 
 		RenderMesh(CmdList, TerrainMesh, TerrainTex, ObjectShader);
+		oobb.Render(CmdList);
 	}
 };

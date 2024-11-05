@@ -250,6 +250,14 @@ public:
 		else if (Position.z < -95.0)
 			Position.z = -95.0;
 
+		// 높이 제한, 맵 밑으로 내려갈 수 없다.
+		// 연산 절약을 위해 맵 oobb와 충돌했을 때만 지형 높이를 얻도록 한다.
+		if (auto terrain = scene.Find("terrain"); terrain) {
+			if (oobb.CheckCollision(terrain->GetOOBB())) {
+				terrainUtil.CheckCollision(Position, 4.0);
+			}
+		}
+
 		// 헬리콥터 부드러운 회전
 		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT * 2);
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
