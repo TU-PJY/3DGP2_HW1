@@ -5,14 +5,15 @@
 class Building : public GameObject {
 private:
 	AABB aabb;
+	AABB aabbInside;
 
 public:
 	AABB GetAABB() {
 		return aabb;
 	}
 
-	XMFLOAT4X4 GetMatrix() {
-		return ResultMatrix;
+	AABB GetInsideAABB() {
+		return aabbInside;
 	}
 
 	Building() {
@@ -23,6 +24,9 @@ public:
 
 	void Update(float FT) {
 		aabb.Update(XMFLOAT3(0.0, 8.0, 0.0), XMFLOAT3(30.0, 40.0, 30.0));
+
+		// 헬리콥터의 레이와 충돌검사하기 위한 안쪽 aabb
+		aabbInside.Update(XMFLOAT3(0.0, 8.0, 0.0), XMFLOAT3(10.0, 40.0, 10.0));
 	}
 
 	void Render(CommandList CmdList) {
@@ -35,5 +39,6 @@ public:
 
 		RenderMesh(CmdList, BuildingMesh, BuildingTex, ObjectShader);
 		aabb.Render(CmdList);
+		aabbInside.Render(CmdList);
 	}
 };

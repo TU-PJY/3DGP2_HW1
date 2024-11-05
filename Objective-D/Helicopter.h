@@ -4,6 +4,7 @@
 #include "MathUtil.h"
 #include "CameraUtil.h"
 #include <cmath>
+#include <algorithm>
 
 // 헬리콘터 오브젝트
 
@@ -102,6 +103,7 @@ public:
 
 	}
 
+	// 현재 시점을 기준으로 자신의 위치가 특정 지점으로 부터 오른쪽에 있는지 검사한다. 오른쪽이라면 true, 왼쪽이라면 false를 리턴한다.
 	bool IsRightOfTarget(XMFLOAT3& targetPosition) {
 		XMFLOAT3 directionToTarget = XMFLOAT3(
 			targetPosition.x - Position.x,
@@ -119,16 +121,28 @@ public:
 		return false;
 	}
 
-	bool IsObjectLookingAtTarget(XMFLOAT3& objectPosition, XMFLOAT3& objectLookAt, XMFLOAT3& targetPosition, float threshold) {
-		XMVECTOR objPosVec = XMVectorSet(objectPosition.x, 0.0f, objectPosition.z, 0.0f);
-		XMVECTOR objLookAtVec = XMVectorSet(objectLookAt.x, 0.0f, objectLookAt.z, 0.0f);
-		XMVECTOR targetPosVec = XMVectorSet(targetPosition.x, 0.0f, targetPosition.z, 0.0f);
+	// 회전각도로 레이를 계산한다.
+	XMVECTOR CalcRayDirection(XMFLOAT3& Rotation) {
+		float RotationX = XMConvertToRadians(Rotation.x);
+		float RotationY = XMConvertToRadians(Rotation.y);
+		float RotationZ = XMConvertToRadians(Rotation.z); 
 
-		XMVECTOR lookAtDir = XMVector3Normalize(objLookAtVec);
-		XMVECTOR toTargetDir = XMVector3Normalize(targetPosVec - objPosVec);
-		float dotProduct = XMVectorGetX(XMVector3Dot(lookAtDir, toTargetDir));
+		XMVECTOR rotationQuat = XMQuaternionRotationRollPitchYaw(RotationX, RotationY, RotationZ);
+		XMVECTOR defaultForward = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+		XMVECTOR rayDirection = XMVector3Rotate(defaultForward, rotationQuat);
 
-		return dotProduct >= threshold;
+		return rayDirection;
+	}
+
+	// 레이가 시작되는 위치를 계산한다.
+	XMVECTOR CalcRayOrigin(XMFLOAT3& Position) {
+		return XMVectorSet(Position.x, Position.y, Position.z, 1.0f);
+	}
+
+	// 레이가 aabb와 충돌하는지 검사한다
+	bool CheckRayIntersectionWithBoundingBox(XMVECTOR& rayOrigin, XMVECTOR& rayDirection, AABB& other) {
+		float distance;
+		return other.aabb.Intersects(rayOrigin, rayDirection, distance);
 	}
 
 	void Update(float FT) {
@@ -215,13 +229,14 @@ public:
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
 
 
-		// 건물의 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터가 건물을 바라보는지 검사한다.
+		// 건물의 외부 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터가 내부 aabb를 바라보는지 검사한다.
 		// 만약 바라본다면 회피기동을 실행한다.
 		// 건물 중점보다 오른쪽에 있으면 오른쪽으로, 왼쪽에 있으면 왼쪽으로 회피기동한다.
 		// 헬리콥터가 건물의 바운드박스를 벗어나기 전까지 회피기동 방향은 바뀌지 않는다.
 		if (auto building = scene.Find("building"); building && CheckCollisionState) {
 			if (oobb.CheckCollision(building->GetAABB())) {
-				if (!AvoidCalculated && IsObjectLookingAtTarget(Position, Vec.Look, XMFLOAT3(0.0, 0.0, 0.0), 0.95)) {
+				if (!AvoidCalculated && 
+					CheckRayIntersectionWithBoundingBox(CalcRayOrigin(Position), CalcRayDirection(HeliRotation), building->GetInsideAABB())) {
 					if (IsRightOfTarget(XMFLOAT3(0.0, 0.0, 0.0)))
 						AvoidDir = 1;
 					else
@@ -231,7 +246,8 @@ public:
 					AvoidState = true;
 				}
 			}
-
+		
+			// 외부 aabb를 벗어나면 회피기동 상태가 해제된다.
 			else {
 				AvoidState = false;
 				AvoidCalculated = false;

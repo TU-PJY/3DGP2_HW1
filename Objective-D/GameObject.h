@@ -74,5 +74,6 @@ public:
 	virtual XMFLOAT3 GetLook() { return {}; }
 
 	virtual void SetUnable() {}
+	virtual AABB GetInsideAABB() { return {}; }
 	virtual XMFLOAT4X4 GetMatrix() { return {}; }
 };
