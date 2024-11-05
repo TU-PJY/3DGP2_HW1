@@ -32,6 +32,8 @@ Texture* HelicopterTex; // 헬리콥터 텍스처
 Mesh* BuildingMesh; // 건물 매쉬
 Texture* BuildingTex; // 건물 텍스처
 
+Texture* SkyboxTex; // 스카이 박스 텍스처
+
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList) {
 	////////////////////////////////
@@ -91,4 +93,5 @@ void CreateTextureResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdL
 	TreeTex = new Texture(Device, CmdList, L"Resources//Image//tree.png", TEXTURE_TYPE_WIC);
 	HelicopterTex = new Texture(Device, CmdList, L"Resources//Image//GunShip.png", TEXTURE_TYPE_WIC);
 	BuildingTex = new Texture(Device, CmdList, L"Resources//Image//texture_palette.png", TEXTURE_TYPE_WIC);
+	SkyboxTex = new Texture(Device, CmdList, L"Resources//Image//texture_sky.png", TEXTURE_TYPE_WIC);
 }

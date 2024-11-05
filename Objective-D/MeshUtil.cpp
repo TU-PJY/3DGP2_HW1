@@ -95,8 +95,9 @@ float Mesh::GetHeightAtPosition(Mesh* terrainMesh, float x, float z, const XMFLO
     static std::vector<XMFLOAT3> worldVertices;
 
     if (!transformed) {
-        // 월드 좌표 변환은 최초 1회만 수행하여 캐시합니다.
+        // 월드 좌표 변환은 최초 1회만 수행하여 캐싱
         XMMATRIX gmtxWorld = XMLoadFloat4x4(&worldMatrix);
+
         for (UINT i = 0; i < terrainMesh->Indices; i++) {
             XMFLOAT3 v = terrainMesh->Position[terrainMesh->PnIndices[i]];
             XMVECTOR vWorld = XMVector3Transform(XMLoadFloat3(&v), gmtxWorld);
@@ -104,6 +105,7 @@ float Mesh::GetHeightAtPosition(Mesh* terrainMesh, float x, float z, const XMFLO
             XMStoreFloat3(&worldVertex, vWorld);
             worldVertices.push_back(worldVertex);
         }
+
         transformed = true;
     }
 
@@ -114,9 +116,8 @@ float Mesh::GetHeightAtPosition(Mesh* terrainMesh, float x, float z, const XMFLO
         XMFLOAT3 v2 = worldVertices[i + 2];
 
         // 삼각형 내부 확인
-        if (IsPointInTriangle(XMFLOAT2(x, z), XMFLOAT2(v0.x, v0.z), XMFLOAT2(v1.x, v1.z), XMFLOAT2(v2.x, v2.z))) {
+        if (IsPointInTriangle(XMFLOAT2(x, z), XMFLOAT2(v0.x, v0.z), XMFLOAT2(v1.x, v1.z), XMFLOAT2(v2.x, v2.z)))
             return ComputeHeightOnTriangle(XMFLOAT3(x, 0, z), v0, v1, v2);
-        }
     }
 
     return 0.0f;

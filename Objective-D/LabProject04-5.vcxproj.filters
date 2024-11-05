@@ -250,6 +250,9 @@
     <ClInclude Include="Building.h">
       <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>[3]____________[ Game Object ]\[ Play Mode Object ]</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scene.cpp">

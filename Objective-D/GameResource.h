@@ -41,6 +41,8 @@ extern Texture* HelicopterTex; // 헬리콥터 텍스처
 extern Mesh* BuildingMesh; // 건물 매쉬
 extern Texture* BuildingTex; // 건물 텍스처
 
+extern Texture* SkyboxTex; // 스카이 박스 텍스처
+
 
 void CreateShaderResource(ID3D12RootSignature* RootSignature, ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);
 void CreateMeshResource(ID3D12Device* Device, ID3D12GraphicsCommandList* CmdList);

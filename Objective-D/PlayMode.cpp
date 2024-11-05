@@ -9,10 +9,12 @@
 #include "Helicopter.h"
 #include "Crosshair.h"
 #include "Building.h"
+#include "Skybox.h"
 
 void PlayMode::Start() {
 	SetBackgroundColor(0.7, 0.7, 0.7);
 	
+	scene.AddObject(new Skybox, "skybox", LAYER_1);
 	scene.AddObject(new CameraController, "cam_controller", LAYER_1);
 	scene.AddObject(new Terrain, "terrain", LAYER_1);
 	scene.AddObject(new Helicopter, "helicopter", LAYER_1);
