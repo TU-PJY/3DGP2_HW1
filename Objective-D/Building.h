@@ -19,14 +19,14 @@ public:
 	Building() {
 		Transform::Scale(ScaleMatrix, 0.04, 0.04, 0.04);
 		Transform::Rotate(RotateMatrix, -90.0, 0.0, 0.0);
-		Transform::Move(TranslateMatrix, 0.0, 8.0, 0.0);
+		Transform::Move(TranslateMatrix, 0.0, 7.0, 0.0);
 	}
 
 	void Update(float FT) {
-		aabb.Update(XMFLOAT3(0.0, 8.0, 0.0), XMFLOAT3(30.0, 40.0, 30.0));
+		aabb.Update(XMFLOAT3(0.0, 7.0, 0.0), XMFLOAT3(30.0, 38.0, 30.0));
 
 		// 헬리콥터의 레이와 충돌검사하기 위한 안쪽 aabb
-		aabbInside.Update(XMFLOAT3(0.0, 8.0, 0.0), XMFLOAT3(10.0, 40.0, 10.0));
+		aabbInside.Update(XMFLOAT3(0.0, 7.0, 0.0), XMFLOAT3(10.0, 38.0, 10.0));
 	}
 
 	void Render(CommandList CmdList) {
