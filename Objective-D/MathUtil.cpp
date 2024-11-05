@@ -75,6 +75,7 @@ void Math::LookAt(XMFLOAT4X4& Matrix, ObjectVector& VectorStruct, XMFLOAT3& This
 	VectorStruct.Look = Vec3::Normalize(XMFLOAT3(Matrix._31, Matrix._32, Matrix._33));
 }
 
+// 특정 위치를 바라보는 벡터를 계산한다.
 void Math::CalcLookAt(ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOAT3& TargetPosition, XMFLOAT3& TargetUpVector) {
 	XMFLOAT4X4 xmf4x4View = Mat4::LookAtLH(TargetPosition, ThisPosition, TargetUpVector);
 	XMFLOAT4X4 Matrix = Mat4::Identity();
@@ -86,6 +87,25 @@ void Math::CalcLookAt(ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOA
 	VectorStruct.Right = Vec3::Normalize(XMFLOAT3(Matrix._11, Matrix._12, Matrix._13));
 	VectorStruct.Look = Vec3::Normalize(XMFLOAT3(Matrix._31, Matrix._32, Matrix._33));
 }
+
+// 빌보드용 LookAt 함수
+void Math::BillboardLookAt(XMFLOAT4X4& Matrix, ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOAT3& TargetPosition) {
+	XMFLOAT4X4 xmf4x4View = Mat4::LookAtLH(TargetPosition, ThisPosition, XMFLOAT3(0.0, 1.0, 0.0));
+	Matrix._11 = xmf4x4View._11; Matrix._12 = xmf4x4View._21; Matrix._13 = xmf4x4View._31;
+
+	VectorStruct.Up = Vec3::Normalize(XMFLOAT3(Matrix._21, Matrix._22, Matrix._23));
+	VectorStruct.Right = Vec3::Normalize(XMFLOAT3(Matrix._11, Matrix._12, Matrix._13));
+	VectorStruct.Look = Vec3::Normalize(XMFLOAT3(Matrix._31, Matrix._32, Matrix._33));
+}
+
+
+// 각도를 360도 범위로 정규화 한다.
+void Math::NormalizeAngleTo360(float Degree) {
+	Degree = fmod(Degree, 360.0f);
+	if (Degree < 0.0f)
+		Degree += 360.0f;
+}
+
 
 float Math::CalcDistance2D(float FromX, float FromY, float ToX, float ToY) {
 	return  std::sqrt(std::pow(FromX - ToX, 2) + std::pow(FromY - ToY, 2));

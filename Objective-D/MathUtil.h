@@ -7,6 +7,8 @@ namespace Math {
 	void InitVector(ObjectVector& VectorStruct);
 	void LookAt(XMFLOAT4X4& Matrix, ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOAT3& TargetPosition, XMFLOAT3& TargetUpVector);
 	void CalcLookAt(ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOAT3& TargetPosition, XMFLOAT3& TargetUpVector);
+	void BillboardLookAt(XMFLOAT4X4& Matrix, ObjectVector& VectorStruct, XMFLOAT3& ThisPosition, XMFLOAT3& TargetPosition);
+	void NormalizeAngleTo360(float angle);
 	float CalcDistance2D(float FromX, float FromY, float ToX, float ToY);
 	float CalcDegree2D(float FromX, float FromY, float ToX, float ToY);
 	float CalcRadians2D(float FromX, float FromY, float ToX, float ToY);

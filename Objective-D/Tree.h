@@ -22,10 +22,6 @@ public:
 		Position.y = terrainUtil.GetFloorHeight(Position.x, Position.z, 0.0);
 	}
 
-	void Update(float FT) {
-		Rotation = Math::CalcDegree2D(camera.GetPosition().x, camera.GetPosition().z, Position.x, Position.z);
-	}
-
 	void Render(CommandList CmdList) {
 		InitMatrix(CmdList, RENDER_TYPE_PERS);
 
@@ -35,8 +31,9 @@ public:
 		Transform::Move(TranslateMatrix, Position.x, Position.y, Position.z);
 		Transform::Scale(ScaleMatrix, 10.0, 10.0, 1.0);
 
+
 		// 카메라를 바라보도록 한다.
-		Math::LookAt(RotateMatrix, Vec, Position, camera.GetPosition(), camera.GetUpVector());
+		Math::BillboardLookAt(RotateMatrix, Vec, Position, camera.GetPosition());
 
 		FlipTexture(CmdList, FLIP_TYPE_V);
 		RenderMesh(CmdList, ImagePannel, TreeTex, ObjectShader);
