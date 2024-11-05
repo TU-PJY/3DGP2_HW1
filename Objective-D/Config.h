@@ -19,7 +19,7 @@ constexpr bool START_WITH_FULL_SCREEN = true;
 constexpr float FRAME_LIMITS = 0;
 
 // 바운드박스 표시 여부를 설정한다.
-#define SHOW_BOUND_BOX
+//#define SHOW_BOUND_BOX
 
 // 게임 월드에 사용할 레이어를 설정한다. 끝 부분에는 반드시 END표기를 해야한다.
 // UI의 경우 가장 최상단 레이어에 추가하는 것을 권장한다.

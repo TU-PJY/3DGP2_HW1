@@ -80,7 +80,7 @@ public:
 		Transform::Move(TranslateMatrix, 0.0, ScrollY, 0.0);
 
 		// 이미지 종횡비와 동일하게 매쉬의 종횡비를 조정한다.
-		Transform::ImageAspect(ScaleMatrix, 500, 1100);
+		Transform::ImageAspect(ScaleMatrix, 600, 1100);
 		Transform::Scale(ScaleMatrix, 3.0, 3.0, 1.0);
 
 		// 이미지 출력용 이미지 패널 매쉬 렌더링

@@ -62,5 +62,6 @@ void PlayMode::MouseMotionController(HWND hWnd) {
 }
 
 void PlayMode::MouseController(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+	mouse.StartMotionCapture(MainHWND);
 	scene.InputMouse(hWnd, nMessageID, wParam, lParam, "cam_controller");
 }

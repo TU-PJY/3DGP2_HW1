@@ -100,10 +100,6 @@ public:
 		}
 	}
 
-	void InputMouseButton(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
-
-	}
-
 	// 현재 시점을 기준으로 자신의 위치가 특정 지점으로 부터 오른쪽에 있는지 검사한다. 오른쪽이라면 true, 왼쪽이라면 false를 리턴한다.
 	bool IsRightOfTarget(XMFLOAT3& targetPosition) {
 		XMFLOAT3 directionToTarget = XMFLOAT3(
