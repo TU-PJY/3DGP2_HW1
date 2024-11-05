@@ -11,7 +11,6 @@
 class Helicopter : public GameObject {
 private:
 	Vector Vec;
-	Vector AvoidVec;
 	XMFLOAT3 Position{0.0, 30.0, -80.0};
 
 	// 날개 회전 값
@@ -32,16 +31,19 @@ private:
 	// 헬기 기울어짐
 	XMFLOAT3 Tilt{};
 	
+	// oobb
 	OOBB oobb;
 
 	// 회피기동 여부
 	bool AvoidState{};
 
-	// 충돌 처리 확인 여부
+	// 충돌 처리 확인 가능 여부
 	bool CheckCollisionState{}; 
 
-	// 벡터 계산 여부
+	// 회피 방향 계산 계산 여부
 	bool AvoidCalculated{};
+
+	// 회피 방향
 	int AvoidDir{};
 
 public:
@@ -52,7 +54,6 @@ public:
 
 	Helicopter() {
 		Math::InitVector(Vec);
-		Math::InitVector(AvoidVec);
 	}
 
 	void InputKey(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
@@ -146,6 +147,31 @@ public:
 	}
 
 	void Update(float FT) {
+		// 건물의 외부 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터가 내부 aabb를 바라보는지 검사한다.
+		// 만약 바라본다면 회피기동을 실행한다.
+		// 건물 중점보다 오른쪽에 있으면 오른쪽으로, 왼쪽에 있으면 왼쪽으로 회피기동한다.
+		// 헬리콥터가 건물의 바운드박스를 벗어나기 전까지 회피기동 방향은 바뀌지 않는다.
+		if (auto building = scene.Find("building"); building && CheckCollisionState) {
+			if (oobb.CheckCollision(building->GetAABB())) {
+				if (!AvoidCalculated &&
+					CheckRayIntersectionWithBoundingBox(CalcRayOrigin(Position), CalcRayDirection(HeliRotation), building->GetInsideAABB())) {
+					if (IsRightOfTarget(XMFLOAT3(0.0, 0.0, 0.0)))
+						AvoidDir = 1;
+					else
+						AvoidDir = -1;
+
+					AvoidCalculated = true;
+					AvoidState = true;
+				}
+			}
+
+			// 외부 aabb를 벗어나면 회피기동 상태가 해제된다.
+			else {
+				AvoidState = false;
+				AvoidCalculated = false;
+			}
+		}
+
 		// 날개 회전
 		WingRotation += FT * 2000;
 
@@ -227,33 +253,7 @@ public:
 		// 헬리콥터 부드러운 회전
 		HeliRotation.x = std::lerp(HeliRotation.x, DestRotation.x, FT * 2);
 		HeliRotation.y = std::lerp(HeliRotation.y, DestRotation.y, FT * 2);
-
-
-		// 건물의 외부 aabb와 헬리콥터의 oobb가 충돌하면 헬리콥터가 내부 aabb를 바라보는지 검사한다.
-		// 만약 바라본다면 회피기동을 실행한다.
-		// 건물 중점보다 오른쪽에 있으면 오른쪽으로, 왼쪽에 있으면 왼쪽으로 회피기동한다.
-		// 헬리콥터가 건물의 바운드박스를 벗어나기 전까지 회피기동 방향은 바뀌지 않는다.
-		if (auto building = scene.Find("building"); building && CheckCollisionState) {
-			if (oobb.CheckCollision(building->GetAABB())) {
-				if (!AvoidCalculated && 
-					CheckRayIntersectionWithBoundingBox(CalcRayOrigin(Position), CalcRayDirection(HeliRotation), building->GetInsideAABB())) {
-					if (IsRightOfTarget(XMFLOAT3(0.0, 0.0, 0.0)))
-						AvoidDir = 1;
-					else
-						AvoidDir = -1;
-
-					AvoidCalculated = true;
-					AvoidState = true;
-				}
-			}
 		
-			// 외부 aabb를 벗어나면 회피기동 상태가 해제된다.
-			else {
-				AvoidState = false;
-				AvoidCalculated = false;
-			}
-		}
-
 		CheckCollisionState = true;
 	}
 
